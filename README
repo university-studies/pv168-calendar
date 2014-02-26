@@ -1,0 +1,3 @@
+Ak sa nepridaju zmeny po push do repozitara
+    git config --global push.default current
+
