@@ -4,40 +4,36 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by xloffay on 5.3.14.
+ * Created by Pavol Loffay, p.loffay@gmail.com on 3/7/14.
  */
-public class EventManagerImpl implements EventManager {
-
-    public EventManagerImpl() {
-    }
-
+public class ReminderManagerImpl implements ReminderManager {
     @Override
-    public void createEvent(Event event) {
+    public void createReminder(Reminder reminder) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void updateEvent(Event event) {
+    public void updateReminder(Reminder reminder) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void deleteEvent(Event event) {
+    public void deleteReminder(Reminder reminder) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Event findEventById(Long id) {
+    public Reminder findReminderById(Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Event> findAllEvents() {
+    public List<Reminder> findAllReminders() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Event> findEventByStartDate(Date date) {
+    public List<Reminder> findRemindersByDate(Date date) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
