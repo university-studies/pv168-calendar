@@ -15,5 +15,5 @@ public interface UserManager {
 
     void updateUser(User user);
 
-    Collection<User> findAllUsers();
+    Collection<User> getAllUsers();
 }

@@ -27,7 +27,7 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public Collection<User> findAllUsers() {
+    public Collection<User> getAllUsers() {
         return null;
     }
 }
