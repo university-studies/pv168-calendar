@@ -7,39 +7,43 @@ public class User {
     /**
      * User's id
      */
-    private int id;
+    private long id;
 
     /**
      * User's login to calendar
      */
-    private final String login;
+    private String login;
     /**
      * User's password
      */
-    private final String hashPassword;
+    private String hashedPassword;
     /**
      * User's email. It will be used, when user forgot password.
      */
-    private final String email;
+    private String email;
 
     public User(String login,String password,String email){
         this.login = login;
-        this.hashPassword = password;
+        this.hashedPassword = password;
         this.email = email;
     }
 
-
+    /*
     public User(int id,String login,String password, String email){
         this.id = id;
         this.login = login;
-        this.hashPassword = password;
+        this.hashedPassword = password;
         this.email = email;
     }
 
+    */
 
-
-    public int getId() {
+    public long getId() {
         return id;
+    }
+
+    public void setId(long id){
+        this.id = id;
     }
 
     public String getLogin() {
@@ -47,7 +51,7 @@ public class User {
     }
 
     public String getPassword() {
-        return hashPassword;
+        return hashedPassword;
     }
 
     public String getEmail() {
@@ -55,6 +59,17 @@ public class User {
     }
 
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
 
     /**
      * Method validate the email
@@ -80,7 +95,7 @@ public class User {
     @Override
     public int hashCode() {
         int result = 17;
-        result = 37*result + id;
+        result = 37*result + (int)(id ^ (id >>> 32));
         return result;
     }
 

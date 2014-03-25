@@ -1,11 +1,18 @@
 package cz.muni.fi.pv168.calendar;
 
+import org.apache.derby.jdbc.ClientDataSource;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.util.logging.resources.logging;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -17,11 +24,28 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
  */
 public class UserManagerTest {
 
-    UserManager userManager;
+    public static final String NEW_TEST_USER_LOGIN = "NewTestUserLogin";
+    private static UserManager userManager;
+    private static final Logger log = LoggerFactory.getLogger(UserManagerTest.class);
+    private static final ClientDataSource ds = new ClientDataSource();
 
     @Before
     public void setUp() throws Exception {
-        userManager = new UserManagerImpl();
+
+    }
+
+    @BeforeClass
+    public static void setClassUp() throws Exception{
+        Properties prop = new Properties();
+        prop.load(Main.class.getResourceAsStream("/myconf.properties"));
+
+        ds.setDatabaseName(prop.getProperty("jdbc.dbname"));
+        ds.setUser(prop.getProperty("jdbc.user"));
+        ds.setPassword(prop.getProperty("jdbc.password"));
+
+
+        log.info("UserManagerTest");
+        userManager = new UserManagerImpl(ds,log);
 
     }
 
@@ -40,12 +64,6 @@ public class UserManagerTest {
             fail("Nevyhodila sa vynimka IllegalArgumentException!");
         }catch(IllegalArgumentException ex){} //ok
 
-        //Existing id error test
-        user = new User(1,"Karol","test","test@test.com");
-        try{
-            userManager.createUser(user);
-            fail("Nevyhodila sa vynimka!");
-        }catch (Exception ex){} //ok -- Exception is temporary solution
     }
 
     @Test
@@ -53,7 +71,7 @@ public class UserManagerTest {
         User user = new User("Test User","test","test@test.com");
         userManager.createUser(user);
 
-        User resultUser = userManager.getUserById(0);
+        User resultUser = userManager.getUserById(user.getId());
         assertEquals(user,resultUser);
 
         assertThat(userManager.getUserById(3),is(nullValue())); //test to return null value if user doesn't exist
@@ -62,26 +80,26 @@ public class UserManagerTest {
         people.add(user);
 
         User user1 = new User("Karol","test","test@test.com");
-        people.add(user1);
         userManager.createUser(user1);
+        people.add(user1);
 
         user1 = new User("Pater","aka","test@test.com");
-        people.add(user1);
         userManager.createUser(user1);
+        people.add(user1);
 
         user1 = new User("Pavol","134","test@test.com");
-        people.add(user1);
         userManager.createUser(user1);
+        people.add(user1);
 
         user1 = new User("Jan","a.z.ma","test@test.com");
-        people.add(user1);
         userManager.createUser(user1);
+        people.add(user1);
 
         Collection<User> users = userManager.getAllUsers();
         assertEquals(users.size(),5);
         for(User u : users){
             if(!people.contains(u))
-                fail("Nespravne udaje!");
+                fail("Nespravne udaje! " + u.toString());
         }
     }
 
@@ -104,4 +122,30 @@ public class UserManagerTest {
                                                                 // the user might have been removed
         assertEquals(user, userManager.getUserById(3));
     }
+
+    @Test
+    public void testUpdateUser() throws Exception{
+        User user = new User("TestUser","test","test@test.com");
+        userManager.createUser(user);
+        user.setLogin(NEW_TEST_USER_LOGIN);
+        userManager.updateUser(user);
+
+        assertEquals(NEW_TEST_USER_LOGIN,userManager.getUserById(user.getId()).getLogin());
+    }
+
+
+    // cleaning database from test data
+    @After
+    public void cleanDB() throws SQLException{
+        try(Connection connection = ds.getConnection()){
+            try(PreparedStatement st = connection.prepareStatement("DROP TABLE Users")){
+                st.execute();
+            }
+            try(PreparedStatement st = connection.prepareStatement("CREATE TABLE Users(id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,name VARCHAR(50)," +
+                    "password VARCHAR(100),email VARCHAR(50))")){
+                st.execute();
+            }
+        }
+    }
+
 }

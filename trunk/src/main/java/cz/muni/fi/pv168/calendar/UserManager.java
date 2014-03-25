@@ -7,13 +7,40 @@ import java.util.Collection;
  */
 public interface UserManager {
 
-    User createUser(User user);
+    /**
+     * The method insert user to database
+     * @param user
+     * @return created user
+     * @throws CalendarException
+     */
+    void createUser(User user) throws CalendarException;
 
-    void removeUser(User user);
+    /**
+     * The method remove user from database
+     * @param user
+     * @throws CalendarException
+     */
+    void removeUser(User user) throws CalendarException;
 
-    User getUserById(int id);
+    /**
+     * The method update user in database
+     * @param user
+     * @throws CalendarException
+     */
+    void updateUser(User user) throws CalendarException;
 
-    void updateUser(User user);
+    /**
+     * The method returns user from database by id
+     * @param id user's id
+     * @return user or null if user don't exist
+     * @throws CalendarException
+     */
+    User getUserById(long id) throws  CalendarException;
 
-    Collection<User> getAllUsers();
+    /**
+     * The method returns collection of users
+     * @return collection of users
+     * @throws CalendarException
+     */
+    Collection<User> getAllUsers() throws CalendarException;
 }
