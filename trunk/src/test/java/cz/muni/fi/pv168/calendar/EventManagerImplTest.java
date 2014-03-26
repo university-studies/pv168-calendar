@@ -1,8 +1,12 @@
 package cz.muni.fi.pv168.calendar;
 
+import org.apache.derby.jdbc.ClientDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.sql.DataSource;
+import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
@@ -15,10 +19,21 @@ import static org.junit.Assert.assertThat;
 public class EventManagerImplTest {
 
     private EventManagerImpl manager;
+    private ClientDataSource dataSource;
 
     @Before
     public void setUp() throws Exception {
-        manager = new EventManagerImpl();
+        Properties properties = new Properties();
+        properties.load(Main.class.getResourceAsStream(Main.DB_PROPERTIES));
+
+        System.out.println(properties.getProperty("db.name"));
+
+        dataSource = new ClientDataSource();
+        dataSource.setDatabaseName(properties.getProperty("db.name"));
+        dataSource.setUser(properties.getProperty("db.user"));
+        dataSource.setPassword("db.password");
+
+        manager = new EventManagerImpl(dataSource);
     }
 
     @After
@@ -51,9 +66,9 @@ public class EventManagerImplTest {
         event1 = manager.findEventById(id);
         event1.setTitle("Ponorka");
         manager.updateEvent(event1);
-        assertEquals("ponorka", event1.getTitle());
-        assertEquals("ponorka", manager.findEventById(id).getTitle());
-        assertEquals("skaredu", manager.findEventById(id).getDescription());
+        assertEquals("Ponorka", event1.getTitle());
+        assertEquals("Ponorka", manager.findEventById(id).getTitle());
+        assertEquals("pekne", manager.findEventById(id).getDescription());
         assertThat("hocico", is(not(equalTo(manager.findEventById(id).getDescription()))));
     }
 
@@ -68,7 +83,8 @@ public class EventManagerImplTest {
          * Check if is event stored id DB
          */
         assertThat(id, is(notNullValue()));
-        assertThat(event1, is(equalTo(manager.findEventById(id))));
+        Event event2 = manager.findEventById(id);
+        assertThat(event1, is(equalTo(event2)));
         assertThat("Kupit si auto", is(equalTo(manager.findEventById(id).getTitle())));
 
         /**

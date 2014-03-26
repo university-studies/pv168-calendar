@@ -1,5 +1,7 @@
 package cz.muni.fi.pv168.calendar;
 
+import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -8,13 +10,13 @@ import java.util.List;
  */
 public interface EventManager {
 
-    public void createEvent(Event event);
-    public void updateEvent(Event event);
-    public void deleteEvent(Event event);
+    public void createEvent(Event event) throws ServiceFailureException;
+    public void updateEvent(Event event) throws ServiceFailureException;
+    public void deleteEvent(Event event) throws ServiceFailureException;
 
-    public Event findEventById(Long id);
-    public List<Event> findAllEvents();
-    public List<Event> findEventByStartDate(Date date);
+    public Event findEventById(Long id) throws ServiceFailureException;
+    public List<Event> findAllEvents() throws ServiceFailureException;
+    public List<Event> findEventByStartDate(Date date) throws ServiceFailureException;
 }
 
 

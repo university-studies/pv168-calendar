@@ -4,6 +4,7 @@ package cz.muni.fi.pv168.calendar;
     - pridat logger
 
 */
+import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
@@ -31,7 +32,7 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void createUser(User user) throws  CalendarException{
+    public void createUser(User user) throws ServiceFailureException {
         if(user == null){
             log.error("cannot insert user (parameter is null Value)");
             throw new IllegalArgumentException("parameter user is null");
@@ -53,12 +54,12 @@ public class UserManagerImpl implements UserManager {
             }
         }catch (SQLException ex){
             log.error("cannot insert user",ex);
-            throw new CalendarException("database insert failed",ex);
+            throw new ServiceFailureException("database insert failed",ex);
         }
     }
 
     @Override
-    public void removeUser(User user) throws  CalendarException{
+    public void removeUser(User user) throws ServiceFailureException {
         log.debug("removeUser({})",user);
         if(user == null){
             log.error("cannot remove user (parameter is null)");
@@ -72,17 +73,17 @@ public class UserManagerImpl implements UserManager {
                 st.setString(4,user.getEmail());
                 int n = st.executeUpdate();
                 if(n != 1){
-                    throw new CalendarException("user wans't deleted from DB");
+                    throw new ServiceFailureException("user wans't deleted from DB");
                 }
             }
         }catch(SQLException ex){
             log.error("cannot remove user",ex);
-            throw new CalendarException("cannot remove user",ex);
+            throw new ServiceFailureException("cannot remove user",ex);
         }
     }
 
     @Override
-    public User getUserById(long id) throws  CalendarException{
+    public User getUserById(long id) throws ServiceFailureException {
         log.debug("getUserById({})",id);
         if(id <= 0){
             log.error("cannot get user because of invalid id");
@@ -109,12 +110,12 @@ public class UserManagerImpl implements UserManager {
             }
         }catch(SQLException ex){
             log.error("cannot get user",ex);
-            throw new CalendarException("Cannot get user from database",ex);
+            throw new ServiceFailureException("Cannot get user from database",ex);
         }
     }
 
     @Override
-    public void updateUser(User user) throws CalendarException{
+    public void updateUser(User user) throws ServiceFailureException {
         log.debug("updateUser({})",user);
         if(user == null){
             log.error("cannot update user (parameter is null)");
@@ -128,17 +129,17 @@ public class UserManagerImpl implements UserManager {
                 st.setLong(4,user.getId());
                 int n = st.executeUpdate();
                 if(n != 1){
-                    throw new CalendarException("user wasn't updated with id " + user.getId());
+                    throw new ServiceFailureException("user wasn't updated with id " + user.getId());
                 }
             }
         }catch (SQLException ex){
             log.error("cannot update user",ex);
-            throw new CalendarException("cannot update user",ex);
+            throw new ServiceFailureException("cannot update user",ex);
         }
     }
 
     @Override
-    public Collection<User> getAllUsers()throws  CalendarException{
+    public Collection<User> getAllUsers()throws ServiceFailureException {
         log.debug("getAllUsers");
         List<User> userList = new ArrayList<User>();
         try(Connection connection = dataSource.getConnection()){
@@ -158,7 +159,7 @@ public class UserManagerImpl implements UserManager {
             }
         }catch(SQLException ex){
             log.error("cannot get all users",ex);
-            throw new CalendarException("database select failed",ex); //treba doplnit message parameter
+            throw new ServiceFailureException("database select failed",ex); //treba doplnit message parameter
         }
 
 

@@ -37,12 +37,11 @@ public class UserManagerTest {
     @BeforeClass
     public static void setClassUp() throws Exception{
         Properties prop = new Properties();
-        prop.load(Main.class.getResourceAsStream("/myconf.properties"));
+        prop.load(Main.class.getResourceAsStream(Main.DB_PROPERTIES));
 
-        ds.setDatabaseName(prop.getProperty("jdbc.dbname"));
-        ds.setUser(prop.getProperty("jdbc.user"));
-        ds.setPassword(prop.getProperty("jdbc.password"));
-
+        ds.setDatabaseName(prop.getProperty("db.name"));
+        ds.setUser(prop.getProperty("db.user"));
+        ds.setPassword(prop.getProperty("db.password"));
 
         log.info("UserManagerTest");
         userManager = new UserManagerImpl(ds,log);
