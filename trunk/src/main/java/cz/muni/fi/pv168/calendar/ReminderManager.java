@@ -1,6 +1,8 @@
 package cz.muni.fi.pv168.calendar;
 
-import java.util.Date;
+import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 /**
@@ -8,11 +10,11 @@ import java.util.List;
  */
 public interface ReminderManager {
 
-    public void createReminder(Reminder reminder);
-    public void updateReminder(Reminder reminder);
-    public void deleteReminder(Reminder reminder);
+    public void createReminder(Reminder reminder) throws ServiceFailureException;
+    public void updateReminder(Reminder reminder) throws ServiceFailureException;
+    public void deleteReminder(Reminder reminder) throws ServiceFailureException;
 
-    public Reminder findReminderById(Long id);
-    public List<Reminder> findAllReminders();
-    public List<Reminder> findRemindersByDate(Date date);
+    public Reminder findReminderById(Long id) throws ServiceFailureException;
+    public List<Reminder> findAllReminders() throws ServiceFailureException;
+    public List<Reminder> findRemindersByDate(DateTime date) throws ServiceFailureException;
 }

@@ -1,17 +1,16 @@
 package cz.muni.fi.pv168.calendar;
 
-
 import cz.muni.fi.pv168.calendar.common.DBUtils;
 import cz.muni.fi.pv168.calendar.common.IllegalEntityException;
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,11 +39,14 @@ public class EventManagerImpl implements EventManager {
             // Temporary turn autocommit mode off. It is turned back on in
             // method DBUtils.closeQuietly(...)
             connection.setAutoCommit(false);
-            String insert = "INSERT INTO Event (title,description,location) VALUES (?,?,?)";
+            String insert = "INSERT INTO Event (title,description,location," +
+                    "startDate,endDate) VALUES (?,?,?,?,?)";
             st = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
             st.setString(1, event.getTitle());
             st.setString(2, event.getDescription());
             st.setString(3, event.getLocation());
+            st.setTimestamp(4, new Timestamp(event.getStartDate().getMillis()));
+            st.setTimestamp(5, new Timestamp(event.getEndDate().getMillis()));
 
             int count = st.executeUpdate();
             DBUtils.checkUpdatesCount(count, event, true);
@@ -66,7 +68,7 @@ public class EventManagerImpl implements EventManager {
         checkDataSource();
 
         if (event.getId() == null) {
-            throw new IllegalEntityException("body id is null");
+            throw new IllegalEntityException("event id is null");
         }
         Connection connection = null;
         PreparedStatement st = null;
@@ -76,12 +78,14 @@ public class EventManagerImpl implements EventManager {
             // method DBUtils.closeQuietly(...)
             connection.setAutoCommit(false);
             String update = "UPDATE Event SET title = ?, description = ?, " +
-                    "location = ?  WHERE id = ?";
+                    "location = ?, startDate = ?, endDate = ? WHERE id = ?";
             st = connection.prepareStatement(update);
             st.setString(1, event.getTitle());
             st.setString(2, event.getDescription());
             st.setString(3, event.getLocation());
-            st.setLong(4, event.getId());
+            st.setTimestamp(4, new Timestamp(event.getStartDate().getMillis()));
+            st.setTimestamp(5, new Timestamp(event.getEndDate().getMillis()));
+            st.setLong(6, event.getId());
 
             int count = st.executeUpdate();
             DBUtils.checkUpdatesCount(count, event, false);
@@ -161,10 +165,9 @@ public class EventManagerImpl implements EventManager {
     @Override
     public List<Event> findAllEvents() throws ServiceFailureException {
         log.debug("findAllEvents");
-        List<Event> events = null;
 
         try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement st = con.prepareStatement("select * from events")) {
+            try (PreparedStatement st = con.prepareStatement("select * from event")) {
                return executeQueryForMultipleEvents(st);
             }
             catch (SQLException e) {
@@ -178,11 +181,28 @@ public class EventManagerImpl implements EventManager {
  }
 
     @Override
-    public List<Event> findEventByStartDate(Date date) throws ServiceFailureException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Event> findEventByStartDate(DateTime date) throws
+            ServiceFailureException {
+        log.debug("findEventByStartDate");
+        List<Event> events = new ArrayList<Event>();
+
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement st = con.prepareStatement("select * from event where" +
+                    " startDate = ?")) {
+                st.setTimestamp(1, new Timestamp(date.getMillis()));
+                return executeQueryForMultipleEvents(st);
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.<Event>emptyList();
     }
 
-    private List<Event> executeQueryForMultipleEvents(PreparedStatement st) throws
+    public static List<Event> executeQueryForMultipleEvents(PreparedStatement st) throws
             SQLException {
         ResultSet rs = st.executeQuery();
 
@@ -193,13 +213,13 @@ public class EventManagerImpl implements EventManager {
         return events;
     }
 
-    private Event rowToEvent(ResultSet rs) throws SQLException {
+    private static Event rowToEvent(ResultSet rs) throws SQLException {
         Event event = new Event();
         event.setId(rs.getLong("id"));
         event.setTitle(rs.getString("title"));
         event.setDescription(rs.getString("description"));
-        //event.setEndDate(rs.getTimestamp("endDate"));
-        //event.setStartDate(rs.getTimestamp("startDate"));
+        event.setEndDate(new DateTime(rs.getTimestamp("endDate")));
+        event.setStartDate(new DateTime(rs.getTimestamp("startDate")));
         event.setLocation(rs.getString("location"));
 
         return event;

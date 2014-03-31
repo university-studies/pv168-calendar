@@ -1,5 +1,7 @@
 package cz.muni.fi.pv168.calendar;
 
+import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+
 import java.util.List;
 
 /**
@@ -7,10 +9,10 @@ import java.util.List;
  */
 public interface RemindersManager {
 
-    public void setReminderToEvent(Reminder reminder, Event event);
-    public void unSetReminderToEvent(Reminder reminder, Event event);
+    public void setReminderToEvent(Reminder reminder, Event event) throws ServiceFailureException;
+    public void unSetReminderFromEvent(Reminder reminder, Event event) throws ServiceFailureException;
 
-    public List<Event> findEventsByReminder(Reminder reminder);
-    public List<Reminder> findRemindersByEvent(Event event);
+    public List<Event> findEventsByReminder(Reminder reminder) throws ServiceFailureException;
+    public List<Reminder> findRemindersByEvent(Event event) throws ServiceFailureException;
 
 }

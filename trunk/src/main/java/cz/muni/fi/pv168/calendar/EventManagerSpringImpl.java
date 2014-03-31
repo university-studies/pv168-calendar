@@ -2,6 +2,7 @@ package cz.muni.fi.pv168.calendar;
 
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
 import org.apache.tomcat.jdbc.pool.DataSource;
+import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,7 +12,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,7 +73,7 @@ public class EventManagerSpringImpl implements EventManager{
     }
 
     @Override
-    public List<Event> findEventByStartDate(Date date) throws ServiceFailureException {
+    public List<Event> findEventByStartDate(DateTime date) throws ServiceFailureException {
         return null;
     }
 }

@@ -1,10 +1,8 @@
-Ak sa nepridaju zmeny po push do repozitara
-    git config --global push.default current
+Diagramy visual Paradigm, Dia
 
-Diagramy visual Paradigm
+Praca s databazou:
+    startNetworkServer -noSecurityManager
 
-Palo otazky na cviko:
-    Testovat v Manager ci je vstup null? 
-        Ak ano vyhodit vynimku?
-        pri chybe s databazou vratit false/vyhodit vynimku?
-        
+    CLI interface je: ij
+        connect 'jdbc:derby://localhost:1527/calendar;user=user;password=user;create=true';
+

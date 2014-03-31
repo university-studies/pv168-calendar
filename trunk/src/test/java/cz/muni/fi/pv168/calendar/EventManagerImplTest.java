@@ -1,11 +1,16 @@
 package cz.muni.fi.pv168.calendar;
 
-import org.apache.derby.jdbc.ClientDataSource;
+import cz.muni.fi.pv168.calendar.common.DBUtils;
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -17,33 +22,49 @@ import static org.junit.Assert.assertThat;
  * Created by Pavol Loffay, p.loffay@gmail.com on 3/7/14.
  */
 public class EventManagerImplTest {
+    Logger log = LoggerFactory.getLogger(EventManagerImpl.class);
 
-    private EventManagerImpl manager;
-    private ClientDataSource dataSource;
+    private static EventManagerImpl manager;
+    private static DataSource dataSource;
 
-    @Before
-    public void setUp() throws Exception {
-        Properties properties = new Properties();
-        properties.load(Main.class.getResourceAsStream(Main.DB_PROPERTIES));
+    /**
+     * Called once on startup
+     */
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        Properties conf = new Properties();
+        conf.load(Main.class.getResourceAsStream(Main.DB_PROPERTIES));
 
-        System.out.println(properties.getProperty("db.name"));
+        PoolProperties p = new PoolProperties();
+        p.setPassword(conf.getProperty("db.password"));
+        p.setUsername(conf.getProperty("db.user"));
+        p.setUrl(conf.getProperty("db.url.embedded"));
+        p.setDriverClassName(conf.getProperty("db.driver.embedded"));
 
-        dataSource = new ClientDataSource();
-        dataSource.setDatabaseName(properties.getProperty("db.name"));
-        dataSource.setUser(properties.getProperty("db.user"));
-        dataSource.setPassword("db.password");
-
+        dataSource = new DataSource(p);
         manager = new EventManagerImpl(dataSource);
     }
 
+    /**
+     * Called before each test method
+     */
+    @Before
+    public void setUp() throws Exception {
+        DBUtils.executeSqlScript(dataSource, Main.class.getResource(Main.DB_CREATE));
+    }
+
+    /**
+     * Called after each test method
+     */
     @After
     public void tearDown() throws Exception {
-
+        DBUtils.executeSqlScript(dataSource,
+                EventManagerImplTest.class.getResource(Main.DB_DROP));
     }
 
     @Test
     public void testCreateEvent() throws Exception {
-        Event event = newEvent("Kupit si auto","pekne");
+        Event event = newEvent("Kupit si auto", "pekne", DateTime.now(), DateTime.now());
 
         manager.createEvent(event);
 
@@ -52,12 +73,13 @@ public class EventManagerImplTest {
 
         assertEquals(event, manager.findEventById(event.getId()));
         assertThat(event, equalTo(manager.findEventById(event.getId())));
+        log.debug(manager.findEventById(event.getId()).getStartDate().toString());
     }
 
     @Test
     public void testUpdateEvent() throws Exception {
-        Event event1 = newEvent("Kupit si auto", "pekne");
-        Event event2 = newEvent("Kupit si motorku", "skaredu");
+        Event event1 = newEvent("Kupit si auto", "pekne", DateTime.now(), DateTime.now());
+        Event event2 = newEvent("Kupit si motorku", "skaredu", DateTime.now(), DateTime.now());
 
         manager.createEvent(event1);
         manager.createEvent(event2);
@@ -74,7 +96,7 @@ public class EventManagerImplTest {
 
     @Test
     public void testDeleteEvent() throws Exception {
-        Event event1 = newEvent("Kupit si auto", "pekne");
+        Event event1 = newEvent("Kupit si auto", "pekne", DateTime.now(), DateTime.now());
 
         manager.createEvent(event1);
         Long id = event1.getId();
@@ -95,20 +117,20 @@ public class EventManagerImplTest {
     }
 
     @Test
-    public void testFindAllEvents() throws Exception {
-
-    }
-
-    @Test
     public void testFindEventByStartDate() throws Exception {
+        DateTime date = new DateTime(2012, 1, 1, 12, 0);
+        Event event = newEvent("titulok", "opis", date, date);
 
+        manager.createEvent(event);
+        assertThat(event, is(equalTo(manager.findEventByStartDate(date).get(0))));
     }
 
-    private Event newEvent(String title, String desc) {
+    private Event newEvent(String title, String desc, DateTime start, DateTime end) {
         Event event = new Event();
         event.setTitle(title);
         event.setDescription(desc);
-
+        event.setStartDate(start);
+        event.setEndDate(end);
         return event;
     }
 }

@@ -1,8 +1,8 @@
 package cz.muni.fi.pv168.calendar;
 
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+import org.joda.time.DateTime;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,7 +16,8 @@ public interface EventManager {
 
     public Event findEventById(Long id) throws ServiceFailureException;
     public List<Event> findAllEvents() throws ServiceFailureException;
-    public List<Event> findEventByStartDate(Date date) throws ServiceFailureException;
+    public List<Event> findEventByStartDate(DateTime date) throws
+            ServiceFailureException;
 }
 
 

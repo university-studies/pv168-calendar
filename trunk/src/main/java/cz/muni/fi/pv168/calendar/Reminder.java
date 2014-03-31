@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.calendar;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * Created by Pavol Loffay, p.loffay@gmail.com on 3/7/14.
@@ -8,21 +8,30 @@ import java.util.Date;
 public class Reminder {
 
     private Long id;
-    private Date date;
+    private DateTime start;
 
     public Reminder() {
     }
 
-    public Reminder(Date date, Long id) {
-        this.date = date;
+    public Reminder(DateTime date, Long id) {
+
+        this.start = date;
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public DateTime getDate() {
+        return start;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(DateTime date) {
+        this.start = start;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
