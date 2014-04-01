@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.calendar;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * Created by xloffay on 5.3.14.
@@ -10,12 +10,11 @@ public class Event {
     private String title;
     private String description;
     private String location;
-    private Date startDate;
-    private Date endDate;
+    private DateTime startDate;
+    private DateTime endDate;
 
     private Repeat repeat;
     private Integer repeatTimes;
-    private User user;
 
     public enum Repeat {
       ONCE,
@@ -60,19 +59,19 @@ public class Event {
         this.location = location;
     }
 
-    public Date getStartDate() {
+    public DateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(DateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public DateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -92,11 +91,32 @@ public class Event {
         this.repeatTimes = repeatTimes;
     }
 
-    public User getUser() {
-        return user;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Event)) return false;
+
+        Event event = (Event) o;
+
+        if (!id.equals(event.id)) return false;
+
+        return true;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", location='" + location + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

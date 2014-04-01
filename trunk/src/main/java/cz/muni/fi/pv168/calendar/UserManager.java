@@ -1,5 +1,7 @@
 package cz.muni.fi.pv168.calendar;
 
+import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+
 import java.util.Collection;
 
 /**
@@ -11,36 +13,36 @@ public interface UserManager {
      * The method insert user to database
      * @param user
      * @return created user
-     * @throws CalendarException
+     * @throws cz.muni.fi.pv168.calendar.common.ServiceFailureException
      */
-    void createUser(User user) throws CalendarException;
+    void createUser(User user) throws ServiceFailureException;
 
     /**
      * The method remove user from database
      * @param user
-     * @throws CalendarException
+     * @throws cz.muni.fi.pv168.calendar.common.ServiceFailureException
      */
-    void removeUser(User user) throws CalendarException;
+    void removeUser(User user) throws ServiceFailureException;
 
     /**
      * The method update user in database
      * @param user
-     * @throws CalendarException
+     * @throws cz.muni.fi.pv168.calendar.common.ServiceFailureException
      */
-    void updateUser(User user) throws CalendarException;
+    void updateUser(User user) throws ServiceFailureException;
 
     /**
      * The method returns user from database by id
      * @param id user's id
      * @return user or null if user don't exist
-     * @throws CalendarException
+     * @throws cz.muni.fi.pv168.calendar.common.ServiceFailureException
      */
-    User getUserById(long id) throws  CalendarException;
+    User getUserById(long id) throws ServiceFailureException;
 
     /**
      * The method returns collection of users
      * @return collection of users
-     * @throws CalendarException
+     * @throws cz.muni.fi.pv168.calendar.common.ServiceFailureException
      */
-    Collection<User> getAllUsers() throws CalendarException;
+    Collection<User> getAllUsers() throws ServiceFailureException;
 }

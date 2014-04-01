@@ -7,17 +7,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.util.logging.resources.logging;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.hasItem;
 
 /**
  * Created by Mario on 5.3.2014.
@@ -37,12 +37,11 @@ public class UserManagerTest {
     @BeforeClass
     public static void setClassUp() throws Exception{
         Properties prop = new Properties();
-        prop.load(Main.class.getResourceAsStream("/myconf.properties"));
+        prop.load(Main.class.getResourceAsStream(Main.DB_PROPERTIES));
 
-        ds.setDatabaseName(prop.getProperty("jdbc.dbname"));
-        ds.setUser(prop.getProperty("jdbc.user"));
-        ds.setPassword(prop.getProperty("jdbc.password"));
-
+        ds.setDatabaseName(prop.getProperty("db.name"));
+        ds.setUser(prop.getProperty("db.user"));
+        ds.setPassword(prop.getProperty("db.password"));
 
         log.info("UserManagerTest");
         userManager = new UserManagerImpl(ds,log);
