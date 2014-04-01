@@ -50,7 +50,7 @@ public class RemindersManagerImpl implements RemindersManager {
             connection.setAutoCommit(false);
 
             updateSt = connection.prepareStatement(
-                    "UPDATE Reminder SET event_id = ? WHERE id = ? AND event_id IS " +
+                    "UPDATE Reminder SET id_event = ? WHERE id = ? AND id_event IS " +
                             "NULL");
             updateSt.setLong(1, event.getId());
             updateSt.setLong(2, reminder.getId());
@@ -98,7 +98,7 @@ public class RemindersManagerImpl implements RemindersManager {
             connection.setAutoCommit(false);
 
             updateSt = connection.prepareStatement(
-                    "UPDATE Reminder SET event_id = NULL WHERE id = ? AND event_id = ?");
+                    "UPDATE Reminder SET id_event = NULL WHERE id = ? AND id_event = ?");
             updateSt.setLong(1, reminder.getId());
             updateSt.setLong(2, event.getId());
             int count = updateSt.executeUpdate();
@@ -134,7 +134,7 @@ public class RemindersManagerImpl implements RemindersManager {
         try {
             conn = dataSource.getConnection();
             st = conn.prepareStatement(
-                    "SELECT Event.id, title, description, location, startDate, endDate" +
+                    "SELECT Event.id, title, description, location, startDate,endDate " +
                             "FROM Event JOIN Reminder ON Event.id = Reminder.id_event " +
                             "WHERE Reminder.id = ?");
             st.setLong(1, reminder.getId());
@@ -168,7 +168,7 @@ public class RemindersManagerImpl implements RemindersManager {
                             "FROM Event JOIN Reminder ON Event.id = Reminder.id_event " +
                             "WHERE Event.id = ?");
             st.setLong(1, event.getId());
-            return ReminderManagerImpl.executeQueryForMultipleEvents(st);
+            return ReminderManagerImpl.executeQueryForMultipleReminders(st);
         } catch (SQLException ex) {
             String msg = "Error when trying to find events for reminder " + event;
             log.debug(msg, ex);

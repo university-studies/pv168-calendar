@@ -13,10 +13,8 @@ public class Reminder {
     public Reminder() {
     }
 
-    public Reminder(DateTime date, Long id) {
-
+    public Reminder(DateTime date) {
         this.start = date;
-        this.id = id;
     }
 
     public DateTime getDate() {
@@ -24,7 +22,7 @@ public class Reminder {
     }
 
     public void setDate(DateTime date) {
-        this.start = start;
+        this.start = date;
     }
 
     public void setId(Long id) {
@@ -33,5 +31,26 @@ public class Reminder {
 
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Reminder)) return false;
+
+        Reminder reminder = (Reminder) o;
+
+        if (!id.equals(reminder.id)) return false;
+        if (start != null ? !start.equals(reminder.start) : reminder.start != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (start != null ? start.hashCode() : 0);
+        return result;
     }
 }

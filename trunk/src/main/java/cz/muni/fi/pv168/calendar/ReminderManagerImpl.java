@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -114,6 +113,7 @@ public class ReminderManagerImpl implements ReminderManager {
             conn.setAutoCommit(false);
             String delete = "DELETE FROM Reminder WHERE id = ?";
             st = conn.prepareStatement(delete);
+            st.setLong(1, reminder.getId());
 
             int count = st.executeUpdate();
             DBUtils.checkUpdatesCount(count, reminder, false);
@@ -135,7 +135,7 @@ public class ReminderManagerImpl implements ReminderManager {
             throw new IllegalArgumentException("id is null");
         }
 
-        String query = "SELECT * FROM Event WHERE id = ?";
+        String query = "SELECT * FROM Reminder WHERE id = ?";
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement st = con.prepareStatement(query)) {
                 st.setLong(1, id);
@@ -163,7 +163,7 @@ public class ReminderManagerImpl implements ReminderManager {
 
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement st = con.prepareStatement("select * from reminder")) {
-                return executeQueryForMultipleEvents(st);
+                return executeQueryForMultipleReminders(st);
             }
             catch (SQLException e) {
                 e.printStackTrace();
@@ -185,7 +185,7 @@ public class ReminderManagerImpl implements ReminderManager {
             try (PreparedStatement st = con.prepareStatement("select * from reminder " +
                     "where start = ?")) {
                 st.setTimestamp(1, new Timestamp(date.getMillis()));
-                return executeQueryForMultipleEvents(st);
+                return executeQueryForMultipleReminders(st);
             }
             catch (SQLException e) {
                 e.printStackTrace();
@@ -203,7 +203,7 @@ public class ReminderManagerImpl implements ReminderManager {
         }
     }
 
-    public static List<Reminder> executeQueryForMultipleEvents(PreparedStatement st) throws
+    public static List<Reminder> executeQueryForMultipleReminders(PreparedStatement st) throws
             SQLException {
         ResultSet rs = st.executeQuery();
 
