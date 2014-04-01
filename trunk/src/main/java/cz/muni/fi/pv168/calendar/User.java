@@ -1,5 +1,12 @@
 package cz.muni.fi.pv168.calendar;
 
+import cz.muni.fi.pv168.calendar.common.PasswordHash;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by Mario on 5.3.2014.
  */
@@ -67,8 +74,16 @@ public class User {
         this.email = email;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setHashedPassword(String password) {
+        if(password == null)
+            throw new IllegalArgumentException("Parameter hashedPassword is null!");
+        try {
+            this.hashedPassword = PasswordHash.createHash(hashedPassword);
+        }catch(NoSuchAlgorithmException ex){
+            ex.printStackTrace();
+        }catch(InvalidKeySpecException ex){
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -77,7 +92,9 @@ public class User {
      * @return true if email is valid, on the other hand it returns false
      */
     private boolean validateEmail(String email){
-        return true;
+        Pattern p = Pattern.compile("[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
+        Matcher m = p.matcher(email);
+        return m.find();
     }
 
     @Override
