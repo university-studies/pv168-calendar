@@ -1,3 +1,9 @@
 trunk/.idea
 trunk/*.iml
 trunk/target
+trunk/calendar-backend/*.iml
+trunk/calendar-backend/.idea
+trunk/calendar-backend/target
+trunk/calendar-web/*.iml
+trunk/calendar-web/.idea
+trunk/calendar-web/target

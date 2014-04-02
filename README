@@ -6,3 +6,7 @@ Praca s databazou:
     CLI interface je: ij
         connect 'jdbc:derby://localhost:1527/calendar;user=user;password=user;create=true';
 
+
+OTAZKY: 
+ return new EventManagerImpl(new TransactionAwareDataSourceProxy(dataSource()));
+ EventManagerImpl chce ako parameter Datasource tomcat jdbc pool, ako spravit aby to islo
