@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -63,7 +64,13 @@ public class RemindersManagerTest {
      */
     @Before
     public void setUp() throws Exception {
-        DBUtils.executeSqlScript(dataSource, Main.class.getResource(Main.DB_CREATE));
+        try {
+            DBUtils.executeSqlScript(dataSource, Main.class.getResource(Main.DB_CREATE));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     /**

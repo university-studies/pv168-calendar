@@ -5,10 +5,11 @@ import cz.muni.fi.pv168.calendar.entity.Reminder;
 import cz.muni.fi.pv168.calendar.common.DBUtils;
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
 import cz.muni.fi.pv168.calendar.service.RemindersManager;
-import org.apache.tomcat.jdbc.pool.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -137,7 +138,7 @@ public class RemindersManagerImpl implements RemindersManager {
         try {
             conn = dataSource.getConnection();
             st = conn.prepareStatement(
-                    "SELECT Event.id, title, description, location, startDate,endDate " +
+                    "SELECT Event.id, title, description, location, startDate, endDate, repeat, repeatTimes " +
                             "FROM Event JOIN Reminder ON Event.id = Reminder.id_event " +
                             "WHERE Reminder.id = ?");
             st.setLong(1, reminder.getId());

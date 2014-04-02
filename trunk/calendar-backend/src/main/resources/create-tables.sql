@@ -1,5 +1,3 @@
--- Script for creating database
-
 CREATE TABLE EVENT (
     id BIGINT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     id_user BIGINT,

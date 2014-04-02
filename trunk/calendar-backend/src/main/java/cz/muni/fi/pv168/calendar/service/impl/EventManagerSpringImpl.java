@@ -3,7 +3,7 @@ package cz.muni.fi.pv168.calendar.service.impl;
 import cz.muni.fi.pv168.calendar.entity.Event;
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
 import cz.muni.fi.pv168.calendar.service.EventManager;
-import org.apache.tomcat.jdbc.pool.DataSource;
+
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;

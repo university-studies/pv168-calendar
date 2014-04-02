@@ -48,6 +48,7 @@ public class Main {
         }
         catch (SQLException ex)
         {
+            ex.printStackTrace();
         }
 
         EventManager eventManager = new EventManagerImpl(dataSource);
