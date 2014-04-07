@@ -12,6 +12,7 @@ public class Event {
     private String location;
     private DateTime startDate;
     private DateTime endDate;
+    private long userId;
 
     private Repeat repeat;
     private Integer repeatTimes;
@@ -48,6 +49,7 @@ public class Event {
     public Event() {
         repeat = Repeat.UNDEF;
         repeatTimes = 0;
+        userId = 0;
     }
 
     public String getTitle() {
@@ -112,6 +114,14 @@ public class Event {
 
     public void setRepeatTimes(Integer repeatTimes) {
         this.repeatTimes = repeatTimes;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     @Override
