@@ -30,9 +30,9 @@ public class User {
     private String email;
 
     public User(String login,String password,String email){
-        this.login = login;
-        this.hashedPassword = password;
-        this.email = email;
+        setLogin(login);
+        setHashedPassword(password);
+        setEmail(email);
     }
 
     /*
@@ -67,10 +67,13 @@ public class User {
 
 
     public void setLogin(String login) {
+        if(login == null) throw new IllegalArgumentException("parameter login is null");
         this.login = login;
     }
 
     public void setEmail(String email) {
+        if(!validateEmail(email))
+            throw new IllegalArgumentException("invalid email");
         this.email = email;
     }
 
@@ -78,10 +81,8 @@ public class User {
         if(password == null)
             throw new IllegalArgumentException("Parameter hashedPassword is null!");
         try {
-            this.hashedPassword = PasswordHash.createHash(hashedPassword);
-        }catch(NoSuchAlgorithmException ex){
-            ex.printStackTrace();
-        }catch(InvalidKeySpecException ex){
+            this.hashedPassword = PasswordHash.createHash(password);
+        }catch(NoSuchAlgorithmException | InvalidKeySpecException ex){
             ex.printStackTrace();
         }
     }
@@ -105,14 +106,15 @@ public class User {
         User user = (User) o;
 
         if (id != user.id) return false;
+        else return login.equals(user.login);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = 17;
         result = 37*result + (int)(id ^ (id >>> 32));
+        result = 37*result + login.hashCode();
         return result;
     }
 

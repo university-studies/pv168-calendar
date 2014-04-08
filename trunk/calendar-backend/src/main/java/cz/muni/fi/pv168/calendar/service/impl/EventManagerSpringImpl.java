@@ -39,6 +39,7 @@ public class EventManagerSpringImpl implements EventManager {
                 .withTableName("event").usingGeneratedKeyColumns("id");
 
         SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("id_user",event.getUserId())
                 .addValue("title", event.getTitle())
                 .addValue("description", event.getDescription())
                 .addValue("location", event.getLocation())
@@ -55,9 +56,9 @@ public class EventManagerSpringImpl implements EventManager {
     public void updateEvent(Event event) throws ServiceFailureException {
         log.debug("Spring update Event");
 
-        jdbc.update("UPDATE event set title = ?, description = ?, location = ?," +
+        jdbc.update("UPDATE event set id_user = ?, title = ?, description = ?, location = ?," +
                 "startDate = ?, endDate = ?, repeat = ?, repeatTimes = ? where id = ?",
-                event.getTitle(), event.getDescription(), event.getLocation(),
+                event.getUserId(),event.getTitle(), event.getDescription(), event.getLocation(),
                 event.getStartDate().toDate(), event.getEndDate().toDate(),
                 event.getRepeat().ordinal(), event.getRepeatTimes(), event.getId());
     }
@@ -74,6 +75,7 @@ public class EventManagerSpringImpl implements EventManager {
         public Event mapRow(ResultSet resultSet, int i) throws SQLException {
             Event event = new Event();
             event.setId(resultSet.getLong("id"));
+            event.setUserId(resultSet.getLong("id_user"));
             event.setTitle(resultSet.getString("title"));
             event.setDescription(resultSet.getString("description"));
             event.setLocation(resultSet.getString("location"));

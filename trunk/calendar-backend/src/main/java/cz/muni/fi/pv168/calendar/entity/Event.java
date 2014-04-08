@@ -12,7 +12,7 @@ public class Event {
     private String location;
     private DateTime startDate;
     private DateTime endDate;
-    private long userId;
+    private Long userId;
 
     private Repeat repeat;
     private Integer repeatTimes;
@@ -49,7 +49,7 @@ public class Event {
     public Event() {
         repeat = Repeat.UNDEF;
         repeatTimes = 0;
-        userId = 0;
+        userId = Long.valueOf(-1);
     }
 
     public String getTitle() {
@@ -140,6 +140,7 @@ public class Event {
     public String toString() {
         return "Event{" +
                 "id=" + id +
+                "id_user=" + userId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", location='" + location + '\'' +

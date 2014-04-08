@@ -32,6 +32,7 @@ import java.util.Properties;
 public class SpringTestConfig {
     Logger logger = LoggerFactory.getLogger(SpringTestConfig.class);
 
+
     @Bean
     public DataSource dataSource() throws IOException {
         Resource resource = new ClassPathResource("database.properties");
@@ -51,6 +52,8 @@ public class SpringTestConfig {
 
         return dataSource;
     }
+
+
 
     @Value("classpath:create-tables.sql.sql")
     private Resource createTables;

@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.calendar.service;
 
+import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
 import cz.muni.fi.pv168.calendar.entity.Event;
 import cz.muni.fi.pv168.calendar.entity.User;
 
@@ -10,9 +11,10 @@ import java.util.Collection;
  */
 public interface UsersEventManager {
 
-    Collection<Event> findEventsByUserId(long userId);
+    Collection<Event> findEventsByUserId(long userId) throws ServiceFailureException;
 
-    void addEventToUser(Event event,User user);
+    void addEventToUser(Event event,User user) throws ServiceFailureException;
 
-    void removeEventFromUser(Event event,User user);
+    void removeEventFromUser(Event event) throws ServiceFailureException;
+
 }

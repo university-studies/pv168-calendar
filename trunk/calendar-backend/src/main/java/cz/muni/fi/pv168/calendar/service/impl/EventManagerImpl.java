@@ -42,16 +42,17 @@ public class EventManagerImpl implements EventManager {
             // Temporary turn autocommit mode off. It is turned back on in
             // method DBUtils.closeQuietly(...)
             connection.setAutoCommit(false);
-            String insert = "INSERT INTO Event (title,description,location," +
-                    "startDate, endDate, repeat, repeatTimes) VALUES (?,?,?,?,?,?,?)";
+            String insert = "INSERT INTO Event (id_user,title,description,location," +
+                    "startDate, endDate, repeat, repeatTimes) VALUES (?,?,?,?,?,?,?,?)";
             st = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-            st.setString(1, event.getTitle());
-            st.setString(2, event.getDescription());
-            st.setString(3, event.getLocation());
-            st.setTimestamp(4, new Timestamp(event.getStartDate().getMillis()));
-            st.setTimestamp(5, new Timestamp(event.getEndDate().getMillis()));
-            st.setInt(6, event.getRepeat().ordinal());
-            st.setInt(7, event.getRepeatTimes());
+            st.setLong(1,event.getUserId());
+            st.setString(2, event.getTitle());
+            st.setString(3, event.getDescription());
+            st.setString(4, event.getLocation());
+            st.setTimestamp(5, new Timestamp(event.getStartDate().getMillis()));
+            st.setTimestamp(6, new Timestamp(event.getEndDate().getMillis()));
+            st.setInt(7, event.getRepeat().ordinal());
+            st.setInt(8, event.getRepeatTimes());
 
             int count = st.executeUpdate();
             DBUtils.checkUpdatesCount(count, event, true);
@@ -82,18 +83,19 @@ public class EventManagerImpl implements EventManager {
             // Temporary turn autocommit mode off. It is turned back on in
             // method DBUtils.closeQuietly(...)
             connection.setAutoCommit(false);
-            String update = "UPDATE Event SET title = ?, description = ?, " +
+            String update = "UPDATE Event SET id_user = ?, title = ?, description = ?, " +
                     "location = ?, startDate = ?, endDate = ?, repeat = ?, " +
                     "repeatTimes = ? WHERE id = ?";
             st = connection.prepareStatement(update);
-            st.setString(1, event.getTitle());
-            st.setString(2, event.getDescription());
-            st.setString(3, event.getLocation());
-            st.setTimestamp(4, new Timestamp(event.getStartDate().getMillis()));
-            st.setTimestamp(5, new Timestamp(event.getEndDate().getMillis()));
-            st.setInt(6, event.getRepeat().ordinal());
-            st.setInt(7,event.getRepeatTimes());
-            st.setLong(8, event.getId());
+            st.setLong(1,event.getUserId());
+            st.setString(2, event.getTitle());
+            st.setString(3, event.getDescription());
+            st.setString(4, event.getLocation());
+            st.setTimestamp(5, new Timestamp(event.getStartDate().getMillis()));
+            st.setTimestamp(6, new Timestamp(event.getEndDate().getMillis()));
+            st.setInt(7, event.getRepeat().ordinal());
+            st.setInt(8,event.getRepeatTimes());
+            st.setLong(9, event.getId());
 
             int count = st.executeUpdate();
             DBUtils.checkUpdatesCount(count, event, false);
@@ -219,6 +221,7 @@ public class EventManagerImpl implements EventManager {
     private static Event rowToEvent(ResultSet rs) throws SQLException {
         Event event = new Event();
         event.setId(rs.getLong("id"));
+        event.setUserId(rs.getLong("id_user"));
         event.setTitle(rs.getString("title"));
         event.setDescription(rs.getString("description"));
         event.setEndDate(new DateTime(rs.getTimestamp("endDate")));

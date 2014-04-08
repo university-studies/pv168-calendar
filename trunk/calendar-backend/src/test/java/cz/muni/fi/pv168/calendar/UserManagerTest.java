@@ -1,9 +1,12 @@
 package cz.muni.fi.pv168.calendar;
 
+import cz.muni.fi.pv168.calendar.common.DBUtils;
 import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.service.UserManager;
 import cz.muni.fi.pv168.calendar.service.impl.UserManagerImpl;
 import org.apache.derby.jdbc.ClientDataSource;
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -30,24 +33,22 @@ public class UserManagerTest {
     public static final String NEW_TEST_USER_LOGIN = "NewTestUserLogin";
     private static UserManager userManager;
     private static final Logger log = LoggerFactory.getLogger(UserManagerTest.class);
-    private static final ClientDataSource ds = new ClientDataSource();
-
-    @Before
-    public void setUp() throws Exception {
-
-    }
+    private static DataSource ds;
 
     @BeforeClass
     public static void setClassUp() throws Exception{
-        Properties prop = new Properties();
-        prop.load(Main.class.getResourceAsStream(Main.DB_PROPERTIES));
+        Properties conf = new Properties();
+        conf.load(Main.class.getResourceAsStream(Main.DB_PROPERTIES));
 
-        ds.setDatabaseName(prop.getProperty("db.name"));
-        ds.setUser(prop.getProperty("db.user"));
-        ds.setPassword(prop.getProperty("db.password"));
+        PoolProperties p = new PoolProperties();
+        p.setPassword(conf.getProperty("db.password"));
+        p.setUsername(conf.getProperty("db.user"));
+        p.setUrl(conf.getProperty("db.url.embedded"));
+        p.setDriverClassName(conf.getProperty("db.driver.embedded"));
 
         log.info("UserManagerTest");
-        userManager = new UserManagerImpl(ds,log);
+        ds = new DataSource(p);
+        userManager = new UserManagerImpl(ds);
 
     }
 
@@ -135,19 +136,18 @@ public class UserManagerTest {
         assertEquals(NEW_TEST_USER_LOGIN,userManager.getUserById(user.getId()).getLogin());
     }
 
+    @Before
+    public void setUp() throws Exception {
+        DBUtils.executeSqlScript(ds, Main.class.getResource(Main.DB_CREATE));
+    }
 
-    // cleaning database from test data
+    /**
+     * Called after each test method
+     */
     @After
-    public void cleanDB() throws SQLException{
-        try(Connection connection = ds.getConnection()){
-            try(PreparedStatement st = connection.prepareStatement("DROP TABLE Users")){
-                st.execute();
-            }
-            try(PreparedStatement st = connection.prepareStatement("CREATE TABLE Users(id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,name VARCHAR(50)," +
-                    "password VARCHAR(100),email VARCHAR(50))")){
-                st.execute();
-            }
-        }
+    public void tearDown() throws Exception {
+        DBUtils.executeSqlScript(ds,
+                EventManagerImplTest.class.getResource(Main.DB_DROP));
     }
 
 }

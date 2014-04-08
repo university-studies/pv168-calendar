@@ -8,6 +8,7 @@ import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
 import cz.muni.fi.pv168.calendar.service.UserManager;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -24,13 +25,13 @@ import java.util.List;
  */
 public class UserManagerImpl implements UserManager {
     private final DataSource dataSource;
-    private final Logger log;
+    private final Logger log = LoggerFactory.getLogger(UserManagerImpl.class);
 
-    public UserManagerImpl(DataSource ds, Logger log){
+    public UserManagerImpl(DataSource ds){
         if(ds == null) throw new IllegalArgumentException("Parameter ds is null");
         if(log == null) throw new IllegalArgumentException("Parameter log is null");
         dataSource = ds;
-        this.log = log;
+        //this.log = log;
     }
 
     @Override
@@ -68,11 +69,10 @@ public class UserManagerImpl implements UserManager {
             throw new IllegalArgumentException("parameter user is null");
         }
         try(Connection connection = dataSource.getConnection()){
-            try(PreparedStatement st = connection.prepareStatement("DELETE FROM Users WHERE id=? AND name=? AND password=? AND email=?")){
+            try(PreparedStatement st = connection.prepareStatement("DELETE FROM Users WHERE id=? AND name=? AND email=?")){
                 st.setLong(1,user.getId());
                 st.setString(2,user.getLogin());
-                st.setString(3,user.getPassword());
-                st.setString(4,user.getEmail());
+                st.setString(3,user.getEmail());
                 int n = st.executeUpdate();
                 if(n != 1){
                     throw new ServiceFailureException("user wans't deleted from DB");

@@ -138,7 +138,7 @@ public class RemindersManagerImpl implements RemindersManager {
         try {
             conn = dataSource.getConnection();
             st = conn.prepareStatement(
-                    "SELECT Event.id, title, description, location, startDate, endDate, repeat, repeatTimes " +
+                    "SELECT Event.id, id_user, title, description, location, startDate, endDate, repeat, repeatTimes " +
                             "FROM Event JOIN Reminder ON Event.id = Reminder.id_event " +
                             "WHERE Reminder.id = ?");
             st.setLong(1, reminder.getId());
