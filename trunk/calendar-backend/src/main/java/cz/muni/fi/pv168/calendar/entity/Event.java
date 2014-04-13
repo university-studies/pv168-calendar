@@ -50,6 +50,8 @@ public class Event {
         repeat = Repeat.UNDEF;
         repeatTimes = 0;
         userId = Long.valueOf(-1);
+        startDate = DateTime.now();
+        endDate = DateTime.now();
     }
 
     public String getTitle() {

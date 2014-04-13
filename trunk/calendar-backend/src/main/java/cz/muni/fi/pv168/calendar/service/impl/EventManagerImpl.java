@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,10 @@ public class EventManagerImpl implements EventManager {
     private final static Logger log = LoggerFactory.getLogger(EventManagerImpl.class);
 
     private final DataSource dataSource;
+
+    public EventManagerImpl() {
+        dataSource = null;
+    }
 
     public EventManagerImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -144,7 +149,7 @@ public class EventManagerImpl implements EventManager {
     }
 
     @Override
-    public List<Event> findEventById(Long id) {
+    public Event findEventById(Long id) {
         log.debug("findEventById " + id);
         if (id == null) {
             throw new IllegalArgumentException("id is null");
@@ -154,7 +159,9 @@ public class EventManagerImpl implements EventManager {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement st = con.prepareStatement(query)) {
                 st.setLong(1, id);
-                return executeQueryForMultipleEvents(st);
+                ResultSet rs = st.executeQuery();
+                rs.next();
+                return rowToEvent(rs);
             }
             catch (SQLException e) {
                 e.printStackTrace();

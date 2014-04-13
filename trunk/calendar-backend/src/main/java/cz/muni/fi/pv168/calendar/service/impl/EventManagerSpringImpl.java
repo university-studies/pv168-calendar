@@ -88,8 +88,8 @@ public class EventManagerSpringImpl implements EventManager {
     };
 
     @Override
-    public List<Event> findEventById(Long id) throws ServiceFailureException {
-        return jdbc.query("SELECT * FROM event WHERE id = ?",
+    public Event findEventById(Long id) throws ServiceFailureException {
+        return jdbc.queryForObject("SELECT * FROM event WHERE id = ?",
             eventMapper, id);
     }
 

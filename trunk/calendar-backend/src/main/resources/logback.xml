@@ -1,9 +1,9 @@
 <configuration>
     <contextName>Calendar</contextName>
 
-    <if condition='isDefined("catalina.base")'>
-        <then>
-            <appender name="APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--<if condition='isDefined("catalina.base")'>-->
+        <!--<then>-->
+            <appender name="Server" class="ch.qos.logback.core.rolling.RollingFileAppender">
                 <file>${catalina.base}/logs/${CONTEXT_NAME}.log</file>
                 <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
                     <fileNamePattern>${catalina.base}/logs/${CONTEXT_NAME}.log.%d{yyyy-MM-dd}</fileNamePattern>
@@ -14,17 +14,18 @@
                     <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
                 </encoder>
             </appender>
-        </then>
-        <else>
-            <appender name="APP" class="ch.qos.logback.core.ConsoleAppender">
+        <!--</then>-->
+        <!--<else>-->
+            <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
                 <withJansi>true</withJansi>
                 <encoder>
                     <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} -> %msg%n</pattern>
                 </encoder>
             </appender>
-        </else>
-    </if>
+        <!--</else>-->
+    <!--</if>-->
 
+    <!-- toto prepise root level -->
     <logger name="cz.muni.fi.pv168.calendar" level="error"/>
     <logger name="cz.muni.fi.pv168.calendar" level="warn"/>
     <logger name="cz.muni.fi.pv168.calendar" level="info"/>
@@ -32,14 +33,14 @@
     <logger name="cz.muni.fi.pv168.calendar" level="trace"/>
 
     <!-- transakce -->
-    <logger name="corg.springframework.transaction" level="debug"/>
-    <logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager" level="debug" />
-    <!-- SQL příkazy -->
-    <logger name="org.springframework.jdbc.core" level="debug"/>
+    <logger name="corg.springframework.transaction" level="info"/>
+    <logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager" level="info" />
+    <!-- SQL -->
+    <logger name="org.springframework.jdbc.core" level="info"/>
     <!-- nastavování hodnot v PreparedStatementech -->
-    <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="trace"/>
+    <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="info"/>
 
     <root level="info">
-        <appender-ref ref="APP"/>
+        <appender-ref ref="Console"/>
     </root>
 </configuration>

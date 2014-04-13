@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +27,13 @@ import static org.junit.Assert.*;
  */
 //@ContextConfiguration(classes = {SpringTestConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring-test.xml"})
+@ContextConfiguration(locations = {"/spring-test.xml"})
 @Transactional
 public class EventManagerSpringImplTest {
     Logger log = LoggerFactory.getLogger(EventManagerSpringImplTest.class);
 
     @Autowired
+    @Qualifier("eventManagerTest")
     private EventManager manager;
 
     /**
@@ -58,9 +60,9 @@ public class EventManagerSpringImplTest {
         assertNotNull(event.getId());
         assertThat(event.getId(), notNullValue());
 
-        assertEquals(event, manager.findEventById(event.getId()).get(0));
-        assertThat(event, equalTo(manager.findEventById(event.getId()).get(0)));
-        log.debug(manager.findEventById(event.getId()).get(0).getStartDate().toString());
+        assertEquals(event, manager.findEventById(event.getId()));
+        assertThat(event, equalTo(manager.findEventById(event.getId())));
+        log.debug(manager.findEventById(event.getId()).getStartDate().toString());
         log.debug(manager.findAllEvents().toString());
     }
 
@@ -74,13 +76,13 @@ public class EventManagerSpringImplTest {
         manager.createEvent(event2);
 
         Long id = event1.getId();
-        event1 = manager.findEventById(id).get(0);
+        event1 = manager.findEventById(id);
         event1.setTitle("Ponorka");
         manager.updateEvent(event1);
         assertEquals("Ponorka", event1.getTitle());
-        assertEquals("Ponorka", manager.findEventById(id).get(0).getTitle());
-        assertEquals("pekne", manager.findEventById(id).get(0).getDescription());
-        assertThat("hocico", is(not(equalTo(manager.findEventById(id).get(0)
+        assertEquals("Ponorka", manager.findEventById(id).getTitle());
+        assertEquals("pekne", manager.findEventById(id).getDescription());
+        assertThat("hocico", is(not(equalTo(manager.findEventById(id)
                 .getDescription()))));
 
         log.debug(manager.findAllEvents().toString());
@@ -98,9 +100,9 @@ public class EventManagerSpringImplTest {
          * Check if is event stored id DB
          */
         assertThat(id, is(notNullValue()));
-        Event event2 = manager.findEventById(id).get(0);
+        Event event2 = manager.findEventById(id);
         assertThat(event1, is(equalTo(event2)));
-        assertThat("Kupit si auto", is(equalTo(manager.findEventById(id).get(0)
+        assertThat("Kupit si auto", is(equalTo(manager.findEventById(id)
                 .getTitle())
         ));
 
@@ -108,7 +110,7 @@ public class EventManagerSpringImplTest {
          * Check delete
          */
         manager.deleteEvent(event1);
-        assertThat(manager.findEventById(id), is(Collections.EMPTY_LIST));
+        assertThat(manager.findEventById(id), is(nullValue()));
         log.debug(manager.findAllEvents().toString());
     }
 

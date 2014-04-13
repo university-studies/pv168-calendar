@@ -43,21 +43,21 @@ public class Main {
         p.setUrl(conf.getProperty("db.url"));
         DataSource dataSource = new DataSource(p);
         try {
-            //DBUtils.executeSqlScript(dataSource, Main.class.getResource(Main.DB_DROP));
+            DBUtils.executeSqlScript(dataSource, Main.class.getResource(Main.DB_DROP));
             DBUtils.executeSqlScript(dataSource, Main.class.getResource(Main.DB_CREATE));
         }
         catch (SQLException ex)
         {
             ex.printStackTrace();
         }
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-context.xml");
+        EventManager springEvent = (EventManager)ctx.getBean("eventManager");
 
-        EventManager eventManager = new EventManagerImpl(dataSource);
+        EventManager eventManager = new EventManagerImpl();
         for (Event event : eventManager.findAllEvents()) {
             log.debug(event.toString());
         }
 
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-context.xml");
-        EventManager springEvent = (EventManager)ctx.getBean("eventManager");
         Event event = new Event();
         event.setTitle("sa");
         event.setDescription("sa");

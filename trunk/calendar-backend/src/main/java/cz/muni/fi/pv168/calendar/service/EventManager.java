@@ -15,7 +15,7 @@ public interface EventManager {
     public void updateEvent(Event event) throws ServiceFailureException;
     public void deleteEvent(Event event) throws ServiceFailureException;
 
-    public List<Event> findEventById(Long id) throws ServiceFailureException;
+    public Event findEventById(Long id) throws ServiceFailureException;
     public List<Event> findAllEvents() throws ServiceFailureException;
     public List<Event> findEventByStartDate(DateTime date) throws
             ServiceFailureException;

@@ -17,7 +17,11 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <property name="driverClassName" value="${db.driver}" />
     </bean>
 
+    <context:component-scan base-package="cz.muni.fi.pv168.calendar" />
+
     <tx:annotation-driven/>
+
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
@@ -38,7 +42,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <constructor-arg ref="dataSource"/>
     </bean>
 
-    <bean id="userManager" class="cz.muni.fi.pv168.calendar.service.impl.ReminderManagerImpl"
+    <bean id="userManager" class="cz.muni.fi.pv168.calendar.service.impl.UserManagerImpl"
           scope="singleton">
         <constructor-arg ref="dataSource"/>
     </bean>
