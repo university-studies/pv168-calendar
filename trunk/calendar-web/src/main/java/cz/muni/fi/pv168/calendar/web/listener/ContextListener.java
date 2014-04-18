@@ -32,7 +32,11 @@ public class ContextListener implements ServletContextListener {
         if (eventManager != null)
             log.info("Bean eventManager nacitana korektne");
         servletContext.setAttribute("eventManager", eventManager);
-        servletContext.setAttribute("userManager", springContext.getBean("userManager", UserManager.class));
+        UserManager userManager = springContext.getBean("userManager", UserManager.class);
+        servletContext.setAttribute("userManager", userManager);
+        if(userManager != null){
+            log.info("Bean userManager loaded correctly");
+        }
     }
 
     @Override

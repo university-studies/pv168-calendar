@@ -63,16 +63,19 @@ public class UserManagerImpl implements UserManager {
 
     @Override
     public void removeUser(User user) throws ServiceFailureException {
-        log.debug("removeUser({})",user);
-        if(user == null){
-            log.error("cannot remove user (parameter is null)");
+        removeUser(user.getId());
+    }
+
+    @Override
+    public void removeUser(long id) throws ServiceFailureException {
+        log.debug("removeUser({})",id);
+        if(id <= 0){
+            log.error("cannot remove user (invalid id)");
             throw new IllegalArgumentException("parameter user is null");
         }
         try(Connection connection = dataSource.getConnection()){
-            try(PreparedStatement st = connection.prepareStatement("DELETE FROM Users WHERE id=? AND name=? AND email=?")){
-                st.setLong(1,user.getId());
-                st.setString(2,user.getLogin());
-                st.setString(3,user.getEmail());
+            try(PreparedStatement st = connection.prepareStatement("DELETE FROM Users WHERE id=?")){
+                st.setLong(1,id);
                 int n = st.executeUpdate();
                 if(n != 1){
                     throw new ServiceFailureException("user wans't deleted from DB");

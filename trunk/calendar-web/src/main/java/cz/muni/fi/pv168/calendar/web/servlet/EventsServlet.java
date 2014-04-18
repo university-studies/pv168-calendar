@@ -30,7 +30,7 @@ public class EventsServlet extends HttpServlet{
         try {
             request.setAttribute("events", getEventManager().findAllEvents());
 //            getServletContext().setAttribute("event", getEventManager().findEventById(4l));
-            log.trace(getEventManager().findEventById(4l).toString());
+            //log.trace(getEventManager().findEventById(4l).toString());
             request.getRequestDispatcher(JSP_LIST).forward(request, response);
         }
         catch (ServiceFailureException ex) {

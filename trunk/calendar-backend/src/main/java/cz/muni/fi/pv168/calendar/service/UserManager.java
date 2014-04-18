@@ -25,6 +25,8 @@ public interface UserManager {
      */
     void removeUser(User user) throws ServiceFailureException;
 
+    void removeUser(long id) throws ServiceFailureException;
+
     /**
      * The method update user in database
      * @param user

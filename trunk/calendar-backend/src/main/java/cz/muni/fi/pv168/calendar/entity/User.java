@@ -31,7 +31,7 @@ public class User {
 
     public User(String login,String password,String email){
         setLogin(login);
-        setHashedPassword(password);
+        setPassword(password);
         setEmail(email);
     }
 
@@ -77,14 +77,21 @@ public class User {
         this.email = email;
     }
 
-    public void setHashedPassword(String password) {
+    public void setPassword(String password) {
         if(password == null)
-            throw new IllegalArgumentException("Parameter hashedPassword is null!");
+            throw new IllegalArgumentException("Parameter password is null!");
         try {
             this.hashedPassword = PasswordHash.createHash(password);
         }catch(NoSuchAlgorithmException | InvalidKeySpecException ex){
             ex.printStackTrace();
         }
+    }
+
+    public void setHashedPassword(String hashedPassword){
+        if(hashedPassword == null){
+            throw new IllegalArgumentException("Parameter hashedPassword is null!");
+        }
+        this.hashedPassword = hashedPassword;
     }
 
     /**

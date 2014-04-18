@@ -40,7 +40,12 @@ public class UserManagerSpringImpl implements UserManager {
 
     @Override
     public void removeUser(User user) throws ServiceFailureException {
-        jdbc.update("DELETE FROM users WHERE id=?",user.getId());
+        removeUser(user.getId());
+    }
+
+    @Override
+    public void removeUser(long id) throws ServiceFailureException {
+        jdbc.update("DELETE FROM users WHERE id=?",id);
     }
 
     @Override

@@ -26,7 +26,7 @@
         <th>Location</th>
         <th>Start date</th>
         <th>End date</th>
-        <th>Action</th>
+        <th colspan="2">Action</th>
     </tr>
     </thead>
     <c:forEach items="${events}" var="e">
