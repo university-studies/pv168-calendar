@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.calendar.web.servlet;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
 import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.service.UserManager;
@@ -43,7 +44,7 @@ public class UsersServlet extends HttpServlet{
                 String email = request.getParameter("email");
                 String id = request.getParameter("id");
                 if (login == null || login.isEmpty() || password == null || password.isEmpty() || email == null || email.isEmpty()) {
-                    request.setAttribute("chyba", "Je povinné vyplniť všetky hodnoty");
+                    request.setAttribute("error", "Je povinné vyplniť všetky hodnoty");
                     showUsersList(request, response);
                     return;
                 }
@@ -65,6 +66,11 @@ public class UsersServlet extends HttpServlet{
                 } catch (ServiceFailureException e) {
                     log.error("Cannot add user");
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+                    return;
+                }catch(IllegalArgumentException e){
+                    log.error("Invalid email, cannot add user");
+                    request.setAttribute("error","Chybný mail");
+                    showUsersList(request,response);
                     return;
                 }
             }

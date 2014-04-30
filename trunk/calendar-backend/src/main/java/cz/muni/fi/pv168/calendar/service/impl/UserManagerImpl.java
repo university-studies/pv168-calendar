@@ -170,4 +170,34 @@ public class UserManagerImpl implements UserManager {
 
         return userList;
     }
+
+    @Override
+    public User getUserByLogin(String login) throws ServiceFailureException {
+        if(login == null){
+            throw new ServiceFailureException("Parameter login is null");
+        }
+        log.debug("getUserByLogin ({})",login);
+        try(Connection connection = this.dataSource.getConnection()){
+            try(PreparedStatement st = connection.prepareStatement("SELECT id,name,password,email FROM Users WHERE name=?")){
+                st.setString(1,login);
+                try(ResultSet rs = st.executeQuery()){
+                    if(rs.next()){
+                        long userId = rs.getLong("id");
+                        String name = rs.getString("name");
+                        String password = rs.getString("password");
+                        String email = rs.getString("email");
+                        User user = new User(name,password,email);
+                        user.setId(userId);
+                        log.debug("retrieve user from database({})",user);
+                        return user;
+                    }else{
+                        log.debug("login ({}) isn't in database",login);
+                        return null;
+                    }
+                }
+            }
+        }catch (SQLException ex){
+            throw new ServiceFailureException("Cannot get user from database",ex);
+        }
+    }
 }

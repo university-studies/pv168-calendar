@@ -74,4 +74,9 @@ public class UserManagerSpringImpl implements UserManager {
     public Collection<User> getAllUsers() throws ServiceFailureException {
         return jdbc.query("SELECT id,name,password,email FROM users",usersMapper);
     }
+
+    @Override
+    public User getUserByLogin(String login) throws ServiceFailureException {
+        return jdbc.queryForObject("SELECT id,name,password,email FROM Users WHERE name=?",usersMapper,login);
+    }
 }

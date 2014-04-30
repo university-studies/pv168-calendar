@@ -11,7 +11,7 @@
     <title>AS</title>
 </head>
 <body>
-<h1>Hello world!</h1>
+<h1>Calendar</h1>
 <a href="${pageContext.request.contextPath}/users">Users</a>
 <a href="${pageContext.request.contextPath}/events">Events</a>
 </body>

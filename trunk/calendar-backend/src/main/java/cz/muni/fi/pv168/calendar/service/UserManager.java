@@ -48,4 +48,12 @@ public interface UserManager {
      * @throws cz.muni.fi.pv168.calendar.common.ServiceFailureException
      */
     Collection<User> getAllUsers() throws ServiceFailureException;
+
+    /**
+     * The method returns user from database by user's login
+     * @param login user's login
+     * @return user or null if user don't exist
+     * @throws ServiceFailureException
+     */
+    User getUserByLogin(String login) throws ServiceFailureException;
 }
