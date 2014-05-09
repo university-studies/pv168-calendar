@@ -104,6 +104,7 @@ public class UserManagerImpl implements UserManager {
                         String password = rs.getString("password");
                         String email = rs.getString("email");
                         User user = new User(name,password,email);
+                        user.setHashedPassword(password);
                         user.setId(userId);
                         log.debug("retrieve user from database({})",user);
                         return user;
@@ -157,6 +158,7 @@ public class UserManagerImpl implements UserManager {
                         String password = rs.getString("password");
                         String email = rs.getString("email");
                         User user = new User(name,password,email);
+                        user.setHashedPassword(password);
                         user.setId(id);
                         userList.add(user);
                     }
@@ -187,6 +189,7 @@ public class UserManagerImpl implements UserManager {
                         String password = rs.getString("password");
                         String email = rs.getString("email");
                         User user = new User(name,password,email);
+                        user.setHashedPassword(password);
                         user.setId(userId);
                         log.debug("retrieve user from database({})",user);
                         return user;

@@ -8,18 +8,16 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:property-placeholder location="classpath:database.properties"/>
+    <context:component-scan base-package="cz.muni.fi.pv168.calendar" />
+    <tx:annotation-driven/>
 
+    <context:property-placeholder location="classpath:database.properties"/>
     <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
         <property name="url" value="${db.url}"/>
         <property name="username" value="${db.user}"/>
         <property name="password" value="${db.password}"/>
         <property name="driverClassName" value="${db.driver}" />
     </bean>
-
-    <context:component-scan base-package="cz.muni.fi.pv168.calendar" />
-
-    <tx:annotation-driven/>
 
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
@@ -43,6 +41,11 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     </bean>
 
     <bean id="userManager" class="cz.muni.fi.pv168.calendar.service.impl.UserManagerImpl"
+          scope="singleton">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean id="usersEventManager" class="cz.muni.fi.pv168.calendar.service.impl.UsersEventManagerImpl"
           scope="singleton">
         <constructor-arg ref="dataSource"/>
     </bean>

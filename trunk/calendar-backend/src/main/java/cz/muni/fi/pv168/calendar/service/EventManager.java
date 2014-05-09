@@ -19,6 +19,8 @@ public interface EventManager {
     public List<Event> findAllEvents() throws ServiceFailureException;
     public List<Event> findEventByStartDate(DateTime date) throws
             ServiceFailureException;
+    public List<Event> findEventByStartDateAndUser(DateTime date, Long userId)
+            throws ServiceFailureException;
 }
 
 

@@ -7,6 +7,7 @@ import cz.muni.fi.pv168.calendar.service.EventManager;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -70,6 +71,38 @@ public class EventManagerSpringImpl implements EventManager {
         jdbc.update("DELETE FROM event WHERE id=?", event.getId());
     }
 
+    @Override
+    public Event findEventById(Long id) throws ServiceFailureException {
+        Event event;
+        try {
+            event = jdbc.queryForObject("SELECT * FROM event WHERE id = ?",
+                    eventMapper, id);
+        }
+        catch (EmptyResultDataAccessException ex)
+        {
+            return null;
+        }
+        return event;
+    }
+
+    @Override
+    public List<Event> findAllEvents() throws ServiceFailureException {
+        return jdbc.query("SELECT * FROM event", eventMapper);
+    }
+
+    @Override
+    public List<Event> findEventByStartDate(DateTime date) throws ServiceFailureException {
+        return jdbc.query("SELECT * FROM event WHERE event.startDate = ?", eventMapper,
+         date.toDate());
+    }
+
+    @Override
+    public List<Event> findEventByStartDateAndUser(DateTime date, Long userId)
+            throws ServiceFailureException {
+        return jdbc.query("SELECT * FROM event WHERE event.startDate = ? AND event.id_user = ?",
+                eventMapper, date.toDate(), userId);
+    }
+
     private RowMapper<Event> eventMapper = new RowMapper<Event>() {
         @Override
         public Event mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -86,21 +119,4 @@ public class EventManagerSpringImpl implements EventManager {
             return event;
         }
     };
-
-    @Override
-    public Event findEventById(Long id) throws ServiceFailureException {
-        return jdbc.queryForObject("SELECT * FROM event WHERE id = ?",
-            eventMapper, id);
-    }
-
-    @Override
-    public List<Event> findAllEvents() throws ServiceFailureException {
-        return jdbc.query("SELECT * FROM event", eventMapper);
-    }
-
-    @Override
-    public List<Event> findEventByStartDate(DateTime date) throws ServiceFailureException {
-        return jdbc.query("SELECT * FROM event WHERE event.startDate = ?", eventMapper,
-         date.toDate());
-    }
 }

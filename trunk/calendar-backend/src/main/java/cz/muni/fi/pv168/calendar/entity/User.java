@@ -82,6 +82,7 @@ public class User {
             throw new IllegalArgumentException("Parameter password is null!");
         try {
             this.hashedPassword = PasswordHash.createHash(password);
+//            this.hashedPassword = password;
         }catch(NoSuchAlgorithmException | InvalidKeySpecException ex){
             ex.printStackTrace();
         }

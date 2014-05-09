@@ -124,6 +124,8 @@ public class EventManagerImpl implements EventManager {
         if (event.getId() == null) {
             throw new IllegalEntityException("event id is null");
         }
+
+        log.debug("deleting event= {}", event.getId());
         Connection conn = null;
         PreparedStatement st = null;
         try {
@@ -202,6 +204,30 @@ public class EventManagerImpl implements EventManager {
             try (PreparedStatement st = con.prepareStatement("select * from event where" +
                     " startDate = ?")) {
                 st.setTimestamp(1, new Timestamp(date.getMillis()));
+                return executeQueryForMultipleEvents(st);
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.<Event>emptyList();
+    }
+
+    @Override
+    public List<Event> findEventByStartDateAndUser(DateTime date, Long userId)
+            throws ServiceFailureException {
+
+        log.debug("findEventByStartDateAndUser");
+        List<Event> events = new ArrayList<Event>();
+
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement st = con.prepareStatement("select * from event where" +
+                    " startDate = ? AND id_user  = ? ")) {
+                st.setTimestamp(1, new Timestamp(date.getMillis()));
+                st.setLong(2, userId);
                 return executeQueryForMultipleEvents(st);
             }
             catch (SQLException e) {

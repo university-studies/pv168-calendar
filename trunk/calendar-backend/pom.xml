@@ -106,6 +106,12 @@
             <artifactId>joda-time</artifactId>
             <version>2.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>no.tornado.databinding</groupId>
+            <artifactId>jxdatepicker-support</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
