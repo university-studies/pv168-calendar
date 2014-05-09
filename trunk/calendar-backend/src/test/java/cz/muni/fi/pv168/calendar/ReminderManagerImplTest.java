@@ -1,7 +1,7 @@
 package cz.muni.fi.pv168.calendar;
 
-import cz.muni.fi.pv168.calendar.entity.Reminder;
 import cz.muni.fi.pv168.calendar.common.DBUtils;
+import cz.muni.fi.pv168.calendar.entity.Reminder;
 import cz.muni.fi.pv168.calendar.service.ReminderManager;
 import cz.muni.fi.pv168.calendar.service.impl.EventManagerImpl;
 import cz.muni.fi.pv168.calendar.service.impl.ReminderManagerImpl;

@@ -1,8 +1,8 @@
 package cz.muni.fi.pv168.calendar;
 
+import cz.muni.fi.pv168.calendar.common.DBUtils;
 import cz.muni.fi.pv168.calendar.entity.Event;
 import cz.muni.fi.pv168.calendar.entity.Reminder;
-import cz.muni.fi.pv168.calendar.common.DBUtils;
 import cz.muni.fi.pv168.calendar.service.EventManager;
 import cz.muni.fi.pv168.calendar.service.ReminderManager;
 import cz.muni.fi.pv168.calendar.service.impl.EventManagerImpl;
@@ -18,13 +18,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 

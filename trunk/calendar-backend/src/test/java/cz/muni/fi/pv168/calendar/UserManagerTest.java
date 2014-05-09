@@ -4,7 +4,6 @@ import cz.muni.fi.pv168.calendar.common.DBUtils;
 import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.service.UserManager;
 import cz.muni.fi.pv168.calendar.service.impl.UserManagerImpl;
-import org.apache.derby.jdbc.ClientDataSource;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.junit.After;
@@ -14,9 +13,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;

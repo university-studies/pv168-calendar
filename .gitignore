@@ -7,3 +7,6 @@ trunk/calendar-backend/target
 trunk/calendar-web/*.iml
 trunk/calendar-web/.idea
 trunk/calendar-web/target
+trunk/calendar-gui/*.iml
+trunk/calendar-gui/.idea
+trunk/calendar-gui/target

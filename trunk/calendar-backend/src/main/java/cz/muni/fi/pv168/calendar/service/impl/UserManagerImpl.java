@@ -4,8 +4,9 @@ package cz.muni.fi.pv168.calendar.service.impl;
     - pridat logger
 
 */
-import cz.muni.fi.pv168.calendar.entity.User;
+
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.service.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

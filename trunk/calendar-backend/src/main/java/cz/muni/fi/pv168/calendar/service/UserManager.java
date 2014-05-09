@@ -1,7 +1,7 @@
 package cz.muni.fi.pv168.calendar.service;
 
-import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+import cz.muni.fi.pv168.calendar.entity.User;
 
 import java.util.Collection;
 

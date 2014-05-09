@@ -1,7 +1,7 @@
 package cz.muni.fi.pv168.calendar;
 
-import cz.muni.fi.pv168.calendar.entity.Event;
 import cz.muni.fi.pv168.calendar.common.DBUtils;
+import cz.muni.fi.pv168.calendar.entity.Event;
 import cz.muni.fi.pv168.calendar.service.impl.EventManagerImpl;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
@@ -14,13 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Created by Pavol Loffay, p.loffay@gmail.com on 3/7/14.

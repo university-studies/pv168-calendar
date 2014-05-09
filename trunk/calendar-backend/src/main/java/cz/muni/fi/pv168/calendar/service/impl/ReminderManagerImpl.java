@@ -1,12 +1,11 @@
 package cz.muni.fi.pv168.calendar.service.impl;
 
-import cz.muni.fi.pv168.calendar.entity.Event;
-import cz.muni.fi.pv168.calendar.entity.Reminder;
 import cz.muni.fi.pv168.calendar.common.DBUtils;
 import cz.muni.fi.pv168.calendar.common.IllegalEntityException;
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+import cz.muni.fi.pv168.calendar.entity.Event;
+import cz.muni.fi.pv168.calendar.entity.Reminder;
 import cz.muni.fi.pv168.calendar.service.ReminderManager;
-
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

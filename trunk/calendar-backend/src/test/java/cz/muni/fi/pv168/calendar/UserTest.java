@@ -4,7 +4,6 @@ import cz.muni.fi.pv168.calendar.common.PasswordHash;
 import cz.muni.fi.pv168.calendar.entity.User;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 

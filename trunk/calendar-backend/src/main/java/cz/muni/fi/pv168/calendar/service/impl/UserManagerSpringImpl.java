@@ -1,7 +1,7 @@
 package cz.muni.fi.pv168.calendar.service.impl;
 
-import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
+import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.service.UserManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

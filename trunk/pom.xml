@@ -16,7 +16,8 @@
     </properties>
 
     <modules>
-     <module>calendar-web</module>
-     <module>calendar-backend</module>
+        <module>calendar-web</module>
+        <module>calendar-backend</module>
+        <module>calendar-gui</module>
     </modules>
 </project>

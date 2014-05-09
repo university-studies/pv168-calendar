@@ -1,7 +1,7 @@
 package cz.muni.fi.pv168.calendar.gui;
 
-import cz.muni.fi.pv168.calendar.entity.*;
 import cz.muni.fi.pv168.calendar.entity.Event;
+import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.service.EventManager;
 import cz.muni.fi.pv168.calendar.service.UserManager;
 import cz.muni.fi.pv168.calendar.service.UsersEventManager;
@@ -17,8 +17,6 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.UnsupportedEncodingException;
-
 import java.util.Collections;
 import java.util.ResourceBundle;
 
@@ -48,7 +46,7 @@ public class Application extends JFrame{
 
     private static JFrame frame;
 
-    public Application(ApplicationContext applicationContext) throws UnsupportedEncodingException {
+    public Application(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             throw new IllegalArgumentException("applicationContext");
         }
