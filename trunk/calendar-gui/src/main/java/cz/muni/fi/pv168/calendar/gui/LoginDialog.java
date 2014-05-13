@@ -50,7 +50,7 @@ public class LoginDialog extends JDialog {
                 String login = textLogin.getText();
                 User user = userManager.getUserByLogin(login);
                 try {
-                    if (user == null || !PasswordHash.validatePassword(passwordText.getText(), user.getPassword())) {
+                    if (user == null || !PasswordHash.validatePassword(passwordText.getPassword(), user.getPassword())) {
                         JOptionPane.showMessageDialog(LoginDialog.this, texts.getString("login_dialog_error"),
                                 texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
                     }
