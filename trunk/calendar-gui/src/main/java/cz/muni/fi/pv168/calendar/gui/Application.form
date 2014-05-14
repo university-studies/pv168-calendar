@@ -29,16 +29,22 @@
               <text resource-bundle="Texts" key="window_button_create_account"/>
             </properties>
           </component>
+          <component id="90f59" class="javax.swing.JButton" binding="usersButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text resource-bundle="Texts" key="window_button_users"/>
+            </properties>
+          </component>
           <component id="ffcc8" class="javax.swing.JButton" binding="createEventButton">
             <constraints/>
             <properties>
               <text resource-bundle="Texts" key="window_button_create_event"/>
             </properties>
           </component>
-          <component id="90f59" class="javax.swing.JButton" binding="usersButton" default-binding="true">
+          <component id="946a1" class="javax.swing.JButton" binding="signOutButton" default-binding="true">
             <constraints/>
             <properties>
-              <text resource-bundle="Texts" key="window_button_users"/>
+              <text value="Sign out"/>
             </properties>
           </component>
         </children>

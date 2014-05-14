@@ -10,8 +10,10 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class UsersListDialog extends JDialog {
@@ -23,7 +25,6 @@ public class UsersListDialog extends JDialog {
 
     private JPanel contentPane;
     private JTable jTableUsers;
-    private JButton signUpButton;
     private JButton editAccountButton;
 
     private User signedUser;
@@ -46,13 +47,10 @@ public class UsersListDialog extends JDialog {
 
         loadUsersFromDB();
 
-        signUpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CreateAccountDialog dialog = new CreateAccountDialog(parent, userManager);
-                dialog.setVisible(true);
-            }
-        });
+        if (signedUser == null) {
+            editAccountButton.setVisible(false);
+        }
+
         editAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -79,12 +77,12 @@ public class UsersListDialog extends JDialog {
                 } catch (InterruptedException e) {
                     log.error("chyba pri nacitavani pouzivatelov do tabulky", e.getMessage());
                     EventQueue.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                JOptionPane.showMessageDialog(contentPane, texts.getString("users_list_dialog_error_message"), texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
+                                               @Override
+                                               public void run() {
+                                                   JOptionPane.showMessageDialog(contentPane, texts.getString("users_list_dialog_error_message"), texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
 
-                            }
-                        }
+                                               }
+                                           }
                     );
                 } catch (ExecutionException e) {
                     log.error("chyba pri nacitavani pouzivatelov do tabulky", e.getMessage());

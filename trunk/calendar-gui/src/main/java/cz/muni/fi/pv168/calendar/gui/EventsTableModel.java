@@ -38,7 +38,6 @@ public class EventsTableModel extends AbstractTableModel {
             events = Collections.<Event>emptyList();
         } else {
             updateData();
-//            events = eventManager.findEventByStartDateAndUser(date, userId);
         }
     }
 
@@ -53,16 +52,13 @@ public class EventsTableModel extends AbstractTableModel {
                     events = eventManager.findEventByStartDateAndUser(date, userId);
                     return events;
                 }
-
                 @Override
                 protected void done() {
-                    fireTableCellUpdated(0, 99);
+                    fireTableDataChanged();
                 }
             };
 
             swingWorker.execute();
-
-            //events = eventManager.findEventByStartDateAndUser(date, userId);
         }
     }
 
@@ -88,7 +84,7 @@ public class EventsTableModel extends AbstractTableModel {
             case 2:
                 return event.getLocation();
             case 3:
-                return event.getStartDate();
+                return event.getStartDate().toLocalDate();
             case 4:
                 return texts.getString("event_table_button_delete");
             default:
@@ -115,15 +111,17 @@ public class EventsTableModel extends AbstractTableModel {
     }
 
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-//            Event event = events.get(rowIndex);
+    public void setValueAt(Object value, int rowIndex, int columnIndex) {
+        final Event event = events.get(rowIndex);
         switch (columnIndex) {
             case 0:
-//                    event.setTitle((String) aValue);
+                event.setTitle((String) value);
                 break;
             case 1:
+                event.setDescription((String) value);
                 break;
             case 2:
+                event.setLocation((String) value);
                 break;
             case 3:
                 break;
@@ -132,6 +130,16 @@ public class EventsTableModel extends AbstractTableModel {
             default:
                 throw new IllegalArgumentException("columnIndex");
         }
+
+        SwingWorker<Void,Void> swingWorker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                eventManager.updateEvent(event);
+                return null;
+            }
+        };
+        swingWorker.execute();
+
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
@@ -141,6 +149,7 @@ public class EventsTableModel extends AbstractTableModel {
             case 0:
             case 1:
             case 2:
+                return true;
             case 3:
                 return false;
             case 4:

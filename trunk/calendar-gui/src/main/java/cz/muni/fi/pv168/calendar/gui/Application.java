@@ -39,6 +39,7 @@ public class Application extends JFrame{
     private JButton createEventButton;
     private JTable eventsTable;
     private JButton usersButton;
+    private JButton signOutButton;
     private EventsTableModel tableModel;
 
     private static JFrame frame;
@@ -60,6 +61,7 @@ public class Application extends JFrame{
         eventsTable.setModel(tableModel);
 
         createEventButton.setVisible(false);
+        signOutButton.setVisible(false);
         jxMonthView = new JXMonthView();
 
         selectedDate = new DateTime(jxMonthView.getToday());
@@ -88,7 +90,6 @@ public class Application extends JFrame{
                     tableModel.setUserId(userLogged.getId());
                     tableModel.setDate(selectedDate);
                     tableModel.updateData();
-                    eventsTable.updateUI();
 
                     jxMonthView.clearFlaggedDates();
 
@@ -104,6 +105,7 @@ public class Application extends JFrame{
                     swingWorker.execute();
 
                     createEventButton.setVisible(true);
+                    signOutButton.setVisible(true);
                     frame.pack();
                 }
             }
@@ -124,7 +126,6 @@ public class Application extends JFrame{
                 createEventDialog.setVisible(true);
                 if (createEventDialog.getNewEventDate() != null) {
                     tableModel.updateData();
-                    eventsTable.updateUI();
                     jxMonthView.addFlaggedDates(createEventDialog.getNewEventDate());
                 }
             }
@@ -135,7 +136,6 @@ public class Application extends JFrame{
                 selectedDate = new DateTime(jxMonthView.getSelectionDate());
                 tableModel.setDate(selectedDate);
                 tableModel.updateData();
-                eventsTable.updateUI();
             }
         });
         usersButton.addActionListener(new ActionListener() {
@@ -149,6 +149,18 @@ public class Application extends JFrame{
         eventsTable.getColumn(texts.getString("event_table_header_actions")).setCellRenderer(new ButtonCellRenderer());
         eventsTable.getColumn(texts.getString("event_table_header_actions")).setCellEditor(new ButtonCellEditor(new JCheckBox()));
         tableModel.setMonthView(jxMonthView);
+
+        signOutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                signOutButton.setVisible(false);
+                jxMonthView.clearFlaggedDates();
+                createEventButton.setVisible(false);
+                userLogged = null;
+                tableModel.setDate(null);
+                tableModel.setUserId(null);
+            }
+        });
     }
 }
 

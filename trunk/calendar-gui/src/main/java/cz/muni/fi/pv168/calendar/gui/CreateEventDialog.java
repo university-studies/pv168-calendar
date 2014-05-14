@@ -68,7 +68,7 @@ public class CreateEventDialog extends JDialog {
                     return;
                 }
 
-                Event event = new Event();
+                final Event event = new Event();
                 event.setTitle(title);
                 event.setDescription(description);
                 event.setLocation(location);
@@ -76,7 +76,16 @@ public class CreateEventDialog extends JDialog {
                 event.setStartDate(date);
                 event.setEndDate(DateTime.now());
 
-                eventManager.createEvent(event);
+                SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        eventManager.createEvent(event);
+
+                        return null;
+                    }
+                };
+                swingWorker.execute();
+
                 newEventDate = date.toDate();
                 dispose();
             }

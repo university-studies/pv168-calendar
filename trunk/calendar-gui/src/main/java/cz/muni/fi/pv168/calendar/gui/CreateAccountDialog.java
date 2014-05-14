@@ -88,8 +88,6 @@ public class CreateAccountDialog extends JDialog {
                         return;
                     }
 
-
-
                     SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
                         @Override
                         protected Void doInBackground() throws Exception {
