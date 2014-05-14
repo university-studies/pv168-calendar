@@ -2,14 +2,11 @@ package cz.muni.fi.pv168.calendar.gui;
 
 import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.service.UserManager;
-import javafx.event.EventDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,9 +15,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class UsersListDialog extends JDialog {
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private final static Logger log = LoggerFactory.getLogger(Application.class);
     private UserManager userManager;
-    private ResourceBundle texts = ResourceBundle.getBundle("Texts", Locale.getDefault());
+    private ResourceBundle texts = ResourceBundle.getBundle("Texts");
 
     private JFrame parent;
 
@@ -35,6 +32,7 @@ public class UsersListDialog extends JDialog {
         super(parent,true);
         this.parent = parent;
         this.signedUser = signedUser;
+        this.userManager = userManager;
 
         setTitle(texts.getString("users_list_dialog_title"));
         setContentPane(contentPane);
@@ -59,7 +57,8 @@ public class UsersListDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                CreateAccountDialog dialog = new CreateAccountDialog(parent,userManager,((UserTableModel)jTableUsers.getModel()).getUser(jTableUsers.getSelectedRow()));
+                CreateAccountDialog dialog = new CreateAccountDialog(parent,userManager);
+
                 dialog.setVisible(true);
             }
         });
@@ -82,7 +81,7 @@ public class UsersListDialog extends JDialog {
                     EventQueue.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                JOptionPane.showMessageDialog(contentPane, texts.getString("users_list_dialog_error_message"), texts.getString("error"), JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(contentPane, texts.getString("users_list_dialog_error_message"), texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
 
                             }
                         }
@@ -92,7 +91,7 @@ public class UsersListDialog extends JDialog {
                     EventQueue.invokeLater(new Runnable() {
                                                @Override
                                                public void run() {
-                                                   JOptionPane.showMessageDialog(contentPane, texts.getString("users_list_dialog_error_message"), texts.getString("error"), JOptionPane.ERROR_MESSAGE);
+                                                   JOptionPane.showMessageDialog(contentPane, texts.getString("users_list_dialog_error_message"), texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
 
                                                }
                                            }

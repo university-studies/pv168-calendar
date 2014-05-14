@@ -38,7 +38,7 @@
           <component id="90f59" class="javax.swing.JButton" binding="usersButton" default-binding="true">
             <constraints/>
             <properties>
-              <text resource-bundle="Texts" key="windosw_button_user_list"/>
+              <text resource-bundle="Texts" key="window_button_users"/>
             </properties>
           </component>
         </children>

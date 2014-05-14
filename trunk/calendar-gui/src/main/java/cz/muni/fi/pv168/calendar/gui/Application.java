@@ -141,7 +141,7 @@ public class Application extends JFrame{
         usersButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                UsersListDialog usersListDialog = new UsersListDialog(frame, userManager);
+                UsersListDialog usersListDialog = new UsersListDialog(frame, userManager, userLogged);
                 usersListDialog.setVisible(true);
             }
         });
