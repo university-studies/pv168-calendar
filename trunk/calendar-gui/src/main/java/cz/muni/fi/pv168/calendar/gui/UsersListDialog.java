@@ -2,6 +2,7 @@ package cz.muni.fi.pv168.calendar.gui;
 
 import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.service.UserManager;
+import javafx.event.EventDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,9 +10,11 @@ import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class UsersListDialog extends JDialog {
@@ -24,25 +27,39 @@ public class UsersListDialog extends JDialog {
     private JPanel contentPane;
     private JTable jTableUsers;
     private JButton signUpButton;
+    private JButton editAccountButton;
 
-    public UsersListDialog(final JFrame parent, final UserManager userManager) {
+    private User signedUser;
+
+    public UsersListDialog(final JFrame parent, final UserManager userManager, User signedUser) {
         super(parent,true);
         this.parent = parent;
+        this.signedUser = signedUser;
 
         setTitle(texts.getString("users_list_dialog_title"));
         setContentPane(contentPane);
         setModal(true);
         //getRootPane().setDefaultButton(buttonOK);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(parent);
 
         jTableUsers.setModel(new UserTableModel());
 
+        loadUsersFromDB();
 
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CreateAccountDialog dialog = new CreateAccountDialog(parent, userManager);
+                dialog.setVisible(true);
+            }
+        });
+        editAccountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                CreateAccountDialog dialog = new CreateAccountDialog(parent,userManager,((UserTableModel)jTableUsers.getModel()).getUser(jTableUsers.getSelectedRow()));
                 dialog.setVisible(true);
             }
         });
@@ -62,13 +79,29 @@ public class UsersListDialog extends JDialog {
                     model.addAllUser(get());
                 } catch (InterruptedException e) {
                     log.error("chyba pri nacitavani pouzivatelov do tabulky", e.getMessage());
-                    JOptionPane.showMessageDialog(contentPane,texts.getString("users_list_dialog_error_message"),texts.getString("error"),JOptionPane.ERROR_MESSAGE);
+                    EventQueue.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                JOptionPane.showMessageDialog(contentPane, texts.getString("users_list_dialog_error_message"), texts.getString("error"), JOptionPane.ERROR_MESSAGE);
+
+                            }
+                        }
+                    );
                 } catch (ExecutionException e) {
                     log.error("chyba pri nacitavani pouzivatelov do tabulky", e.getMessage());
-                    JOptionPane.showMessageDialog(contentPane, texts.getString("users_list_dialog_error_message"), texts.getString("error"), JOptionPane.ERROR_MESSAGE);
+                    EventQueue.invokeLater(new Runnable() {
+                                               @Override
+                                               public void run() {
+                                                   JOptionPane.showMessageDialog(contentPane, texts.getString("users_list_dialog_error_message"), texts.getString("error"), JOptionPane.ERROR_MESSAGE);
+
+                                               }
+                                           }
+                    );
                 }
             }
         };
+
+        swingWorker.execute();
     }
 
     private class UserTableModel extends AbstractTableModel{
@@ -82,6 +115,10 @@ public class UsersListDialog extends JDialog {
         @Override
         public int getColumnCount() {
             return 3;
+        }
+
+        public User getUser(int rowIndex){
+            return userList.get(rowIndex);
         }
 
         @Override
@@ -141,37 +178,7 @@ public class UsersListDialog extends JDialog {
             swingWorker.execute();
         }
 
-        @Override
-        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            User user = userList.get(rowIndex);
-            switch (columnIndex){
-                case 0:
-                    break;
-                case 1:
-                    user.setLogin((String) aValue);
-                    break;
-                case 2:
-                    user.setEmail((String)aValue);
-                    break;
-                default:
-                    throw new IllegalArgumentException("columnIndex");
-            }
-            updateUserToDB(user);
-            fireTableCellUpdated(rowIndex,columnIndex);
-        }
 
-        @Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            switch (columnIndex){
-                case 0:
-                    return false;
-                case 1:
-                case 2:
-                    return true;
-                default:
-                    throw new IllegalArgumentException("columnIndex");
-            }
-        }
 
         @Override
         public Class<?> getColumnClass(int columnIndex) {
