@@ -38,7 +38,7 @@ public class Main {
         p.setUrl(conf.getProperty("db.url"));
         DataSource dataSource = new DataSource(p);
         try {
-            DBUtils.executeSqlScript(dataSource, Main.class.getResource(Main.DB_DROP));
+            //DBUtils.executeSqlScript(dataSource, Main.class.getResource(Main.DB_DROP));
             DBUtils.executeSqlScript(dataSource, Main.class.getResource(Main.DB_CREATE));
         }
         catch (SQLException ex)

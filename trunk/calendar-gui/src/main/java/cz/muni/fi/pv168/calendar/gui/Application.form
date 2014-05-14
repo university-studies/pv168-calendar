@@ -35,6 +35,12 @@
               <text resource-bundle="Texts" key="window_button_create_event"/>
             </properties>
           </component>
+          <component id="90f59" class="javax.swing.JButton" binding="usersButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text resource-bundle="Texts" key="windosw_button_user_list"/>
+            </properties>
+          </component>
         </children>
       </toolbar>
       <grid id="6cf56" binding="calendarPane" layout-manager="GridBagLayout">

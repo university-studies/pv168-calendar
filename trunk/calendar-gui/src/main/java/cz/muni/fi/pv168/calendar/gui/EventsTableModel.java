@@ -12,7 +12,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
+
+//import java.awt.*;
 
 /**
  * Created by pavol on 9.5.2014.
@@ -34,7 +37,8 @@ public class EventsTableModel extends AbstractTableModel {
         if (userId == null || date == null) {
             events = Collections.<Event>emptyList();
         } else {
-            events = eventManager.findEventByStartDateAndUser(date, userId);
+            updateData();
+//            events = eventManager.findEventByStartDateAndUser(date, userId);
         }
     }
 
@@ -42,7 +46,23 @@ public class EventsTableModel extends AbstractTableModel {
         if (userId == null || date == null) {
             events = Collections.<Event>emptyList();
         } else {
-            events = eventManager.findEventByStartDateAndUser(date, userId);
+            //load data from background
+            SwingWorker <List<Event>, Void>swingWorker = new SwingWorker<List<Event>, Void>() {
+                @Override
+                protected List<Event> doInBackground() throws Exception {
+                    events = eventManager.findEventByStartDateAndUser(date, userId);
+                    return events;
+                }
+
+                @Override
+                protected void done() {
+                    fireTableCellUpdated(0, 99);
+                }
+            };
+
+            swingWorker.execute();
+
+            //events = eventManager.findEventByStartDateAndUser(date, userId);
         }
     }
 
@@ -236,9 +256,18 @@ class ButtonCellEditor extends DefaultCellEditor {
     @Override
     public Object getCellEditorValue() {
         if (isPushed) {
-            EventsTableModel model = (EventsTableModel) table.getModel();
-            Event eventToDelete = model.getEventAtRow(row);
-            model.getEventManager().deleteEvent(eventToDelete);
+            final EventsTableModel model = (EventsTableModel) table.getModel();
+            final Event eventToDelete = model.getEventAtRow(row);
+
+            //delete in background
+            SwingWorker<Void,Void> swingWorker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    model.getEventManager().deleteEvent(eventToDelete);
+                    return null;
+                }
+            };
+            swingWorker.execute();
 
             model.deleteEvent(row);
             model.fireTableRowsDeleted(row, row);

@@ -38,6 +38,7 @@ public class Application extends JFrame{
     private JPanel calendarPane;
     private JButton createEventButton;
     private JTable eventsTable;
+    private JButton usersButton;
     private EventsTableModel tableModel;
 
     private static JFrame frame;
@@ -90,9 +91,18 @@ public class Application extends JFrame{
                     eventsTable.updateUI();
 
                     jxMonthView.clearFlaggedDates();
-                    for (Event event : usersEventManager.findEventsByUserId(userLogged.getId())) {
-                        jxMonthView.addFlaggedDates(event.getStartDate().toDate());
-                    }
+
+                    SwingWorker<Void,Void> swingWorker = new SwingWorker<Void, Void>() {
+                        @Override
+                        protected Void doInBackground() throws Exception {
+                            for (Event event : usersEventManager.findEventsByUserId(userLogged.getId())) {
+                                jxMonthView.addFlaggedDates(event.getStartDate().toDate());
+                            }
+                            return null;
+                        }
+                    };
+                    swingWorker.execute();
+
                     createEventButton.setVisible(true);
                     frame.pack();
                 }
@@ -126,6 +136,13 @@ public class Application extends JFrame{
                 tableModel.setDate(selectedDate);
                 tableModel.updateData();
                 eventsTable.updateUI();
+            }
+        });
+        usersButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                UsersListDialog usersListDialog = new UsersListDialog(frame, userManager);
+                usersListDialog.setVisible(true);
             }
         });
 

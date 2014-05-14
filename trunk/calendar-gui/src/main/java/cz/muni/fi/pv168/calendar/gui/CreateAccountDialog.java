@@ -48,7 +48,7 @@ public class CreateAccountDialog extends JDialog {
         buttonOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String login = textLogin.getText();
+                final String login = textLogin.getText();
                 String email = textEmail.getText();
                 String password = new String(textPassword.getPassword());
 
@@ -72,7 +72,7 @@ public class CreateAccountDialog extends JDialog {
                     return;
                 }
 
-                User userNew;
+                final User userNew;
                 try {
                     userNew = new User(login, password, email);
                 } catch (IllegalArgumentException ex) {
@@ -83,7 +83,16 @@ public class CreateAccountDialog extends JDialog {
                 }
 
                 dispose();
-                userManager.createUser(userNew);
+
+                SwingWorker<Void,Void> swingWorker = new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        userManager.createUser(userNew);
+
+                        return null;
+                    }
+                };
+                swingWorker.execute();
             }
         });
     }
