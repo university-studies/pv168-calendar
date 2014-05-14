@@ -28,7 +28,7 @@ public class UsersListDialog extends JDialog {
 
     private User signedUser;
 
-    public UsersListDialog(final JFrame parent, final UserManager userManager, User signedUser) {
+    public UsersListDialog(final JFrame parent, final UserManager userManager, final User signedUser) {
         super(parent,true);
         this.parent = parent;
         this.signedUser = signedUser;
@@ -58,7 +58,7 @@ public class UsersListDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 CreateAccountDialog dialog = new CreateAccountDialog(parent,userManager);
-
+                dialog.setEditedUser(signedUser);
                 dialog.setVisible(true);
             }
         });
@@ -116,8 +116,9 @@ public class UsersListDialog extends JDialog {
             return 3;
         }
 
-        public User getUser(int rowIndex){
-            return userList.get(rowIndex);
+        public void clearTable(){
+            userList.clear();
+            fireTableRowsDeleted(0,0);
         }
 
         @Override
