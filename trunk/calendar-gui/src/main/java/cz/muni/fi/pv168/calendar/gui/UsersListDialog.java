@@ -33,6 +33,9 @@ public class UsersListDialog extends JDialog {
         super(parent,true);
         this.parent = parent;
         this.signedUser = signedUser;
+        if(signedUser == null){
+            editAccountButton.setEnabled(false);
+        }
         this.userManager = userManager;
 
         setTitle(texts.getString("users_list_dialog_title"));
@@ -54,9 +57,8 @@ public class UsersListDialog extends JDialog {
         editAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                CreateAccountDialog dialog = new CreateAccountDialog(parent,userManager);
-                dialog.setEditedUser(signedUser);
+                EditAccountDialog dialog = new EditAccountDialog(parent,userManager);
+                dialog.setSignedUser(signedUser);
                 dialog.setVisible(true);
             }
         });

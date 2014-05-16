@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 public class CreateEventDialog extends JDialog {
     private final static Logger log = LoggerFactory.getLogger(CreateEventDialog.class);
     private static ResourceBundle texts = ResourceBundle.getBundle("Texts");
-    private final static String TITLE = "Create Event";
+    private final static String TITLE = texts.getString("create_event_dialog_title");
 
     private JPanel contentPane;
     private JTextField textTitle;

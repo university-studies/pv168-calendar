@@ -12,9 +12,8 @@ import java.util.ResourceBundle;
 
 public class CreateAccountDialog extends JDialog {
     private final static Logger log = LoggerFactory.getLogger(CreateAccountDialog.class);
-    public static final String PASSWORD_TEXT = "password";
     private static ResourceBundle texts = ResourceBundle.getBundle("Texts");
-    private static final String TITLE = "Create account";
+    private static final String TITLE = texts.getString("create_account_dialog_title");
 
     private JPanel contentPane;
     private JButton buttonOK;
@@ -42,7 +41,6 @@ public class CreateAccountDialog extends JDialog {
         setResizable(false);
 
 
-
         buttonCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -53,81 +51,54 @@ public class CreateAccountDialog extends JDialog {
         buttonOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if(editedUser == null) {
-                    final String login = textLogin.getText();
-                    String email = textEmail.getText();
-                    String password = new String(textPassword.getPassword());
+                final String login = textLogin.getText();
+                String email = textEmail.getText();
+                String password = new String(textPassword.getPassword());
 
-                    log.debug("login: {}", login);
-                    log.debug("email: {}", email);
-                    log.debug("password: {}", password);
+                log.debug("login: {}", login);
+                log.debug("email: {}", email);
+                log.debug("password: {}", password);
 
-                    if (login.length() < 1 || email.length() < 1 ||
-                            password.length() < 1) {
+                if (login.length() < 1 || email.length() < 1 ||
+                        password.length() < 1) {
 
-                        JOptionPane.showMessageDialog(CreateAccountDialog.this,
-                                texts.getString("create_account_dialog_error_dialog_fill_in"),
-                                texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if (userManager.getUserByLogin(login) != null) {
-                        JOptionPane.showMessageDialog(CreateAccountDialog.this,
-                                texts.getString("create_account_dialog_error_dialog_login"),
-                                texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
-                    final User userNew;
-                    try {
-                        userNew = new User(login, password, email);
-                    } catch (IllegalArgumentException ex) {
-                        JOptionPane.showMessageDialog(CreateAccountDialog.this,
-                                texts.getString("create_account_dialog_error_dialog_email"),
-                                texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
-                    SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
-                        @Override
-                        protected Void doInBackground() throws Exception {
-                            userManager.createUser(userNew);
-
-                            return null;
-                        }
-                    };
-                    swingWorker.execute();
-
-
-                }else{
-                    editedUser.setLogin(textLogin.getText());
-                    if(!textPassword.getPassword().toString().equals(PASSWORD_TEXT)){
-                        editedUser.setPassword(textPassword.getPassword().toString());
-                    }
-                    editedUser.setEmail(textEmail.getText());
-
-                    SwingWorker<Void,Void> swingWorker = new SwingWorker<Void, Void>() {
-                        private User user = editedUser;
-
-                        @Override
-                        protected Void doInBackground() throws Exception {
-                            userManager.updateUser(user);
-
-                            return null;
-                        }
-                    };
+                    JOptionPane.showMessageDialog(CreateAccountDialog.this,
+                            texts.getString("create_account_dialog_error_dialog_fill_in"),
+                            texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+
+                if (userManager.getUserByLogin(login) != null) {
+
+                    JOptionPane.showMessageDialog(CreateAccountDialog.this,
+                            texts.getString("create_account_dialog_error_dialog_login"),
+                            texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                final User userNew;
+                try {
+                    userNew = new User(login, password, email);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(CreateAccountDialog.this,
+                            texts.getString("create_account_dialog_error_dialog_email"),
+                            texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        userManager.createUser(userNew);
+
+                        return null;
+                    }
+                };
+                swingWorker.execute();
 
                 dispose();
             }
         });
     }
 
-    public void setEditedUser(User editedUser) {
-        this.editedUser = editedUser;
-
-        this.textPassword.setText(PASSWORD_TEXT);
-        this.textLogin.setText(editedUser.getLogin());
-        this.textEmail.setText(editedUser.getEmail());
-    }
 }
