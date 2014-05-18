@@ -60,6 +60,8 @@ public class UsersListDialog extends JDialog {
                 EditAccountDialog dialog = new EditAccountDialog(parent,userManager);
                 dialog.setSignedUser(signedUser);
                 dialog.setVisible(true);
+
+                loadUsersFromDB();
             }
         });
     }
@@ -74,6 +76,7 @@ public class UsersListDialog extends JDialog {
             @Override
             protected void done() {
                 UserTableModel model = (UserTableModel) jTableUsers.getModel();
+                model.clearTable();
                 try {
                     model.addAllUser(get());
                 } catch (InterruptedException e) {
@@ -118,6 +121,7 @@ public class UsersListDialog extends JDialog {
 
         public void clearTable(){
             userList.clear();
+            
             fireTableRowsDeleted(0,0);
         }
 

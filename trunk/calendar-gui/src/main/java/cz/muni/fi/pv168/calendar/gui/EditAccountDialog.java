@@ -74,34 +74,46 @@ public class EditAccountDialog extends JDialog {
 
     private void onOK() {
 // add your code here
-        if(signedUser != null){
-            try {
-                if(PasswordHash.validatePassword(textOldPassword.getPassword(),signedUser.getPassword())){
-                    if(textNewPassword.getPassword().length > 0){
-                        signedUser.setPassword(String.valueOf(textNewPassword.getPassword()));
-                        SwingWorker<Void,Void> swingWorker = new SwingWorker<Void, Void>() {
-                            private User user = signedUser;
 
-                            @Override
-                            protected Void doInBackground() throws Exception {
-                                userManager.updateUser(signedUser);
-                                return null;
-                            }
-                        };
-
-                        swingWorker.execute();
-                    }else{
-                        JOptionPane.showMessageDialog(this,texts.getString("edit_account_dialog_error_password_new"),texts.getString("error"),JOptionPane.ERROR_MESSAGE);
-                    }
-                }else{
-                    JOptionPane.showMessageDialog(this,texts.getString("edit_account_dialog_error_password_old"),texts.getString("error"),JOptionPane.ERROR_MESSAGE);
+        final User tmpUser = new User(signedUser.getLogin(), "", signedUser.getEmail());
+        tmpUser.setId(signedUser.getId());
+        tmpUser.setHashedPassword(signedUser.getPassword());
+        try {
+            if (textOldPassword.getPassword().length > 0) {
+                if (!PasswordHash.validatePassword(textOldPassword.getPassword(), signedUser.getPassword())) {
+                    JOptionPane.showMessageDialog(EditAccountDialog.this, texts.getString("edit_account_dialog_error_password_old"), texts.getString("error_dialog_title"),
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (InvalidKeySpecException e) {
-                e.printStackTrace();
+                if (textNewPassword.getPassword().length < 3) {
+                    JOptionPane.showMessageDialog(EditAccountDialog.this, texts.getString("edit_account_dialog_error_password_new"), texts.getString("error_dialog_title"),
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                tmpUser.setPassword(String.valueOf(textNewPassword.getPassword()));
             }
+
+            tmpUser.setEmail(textEmail.getText());
+            tmpUser.setLogin(textLogin.getText());
+            SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+                private User user = tmpUser;
+
+                @Override
+                protected Void doInBackground() throws Exception {
+                    userManager.updateUser(user);
+                    return null;
+                }
+            };
+
+            swingWorker.execute();
+
+        } catch (NoSuchAlgorithmException e) {
+            log.error("Chyba pri kontrole hesla", e);
+        } catch (InvalidKeySpecException e) {
+            log.error("Chyba pri kontrole hesla", e);
         }
+
         dispose();
     }
 
