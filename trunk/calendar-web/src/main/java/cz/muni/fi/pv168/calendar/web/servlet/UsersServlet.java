@@ -1,6 +1,6 @@
 package cz.muni.fi.pv168.calendar.web.servlet;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
+//import com.sun.javaws.exceptions.InvalidArgumentException;
 import cz.muni.fi.pv168.calendar.common.ServiceFailureException;
 import cz.muni.fi.pv168.calendar.entity.User;
 import cz.muni.fi.pv168.calendar.service.UserManager;
