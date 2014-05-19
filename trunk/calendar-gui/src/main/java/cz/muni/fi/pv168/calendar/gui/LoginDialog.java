@@ -12,11 +12,12 @@ import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 public class LoginDialog extends JDialog {
     private final static Logger log = LoggerFactory.getLogger(LoginDialog.class);
     private static ResourceBundle texts = ResourceBundle.getBundle("Texts");
-    private final String TITLE = "Sign in";
+    private final String TITLE = texts.getString("login_dialog_title");
 
     private  JFrame parent;
 
@@ -49,6 +50,7 @@ public class LoginDialog extends JDialog {
 
                 String login = textLogin.getText();
                 User user = userManager.getUserByLogin(login);
+
                 try {
                     if (user == null || !PasswordHash.validatePassword(passwordText.getPassword(), user.getPassword())) {
                         JOptionPane.showMessageDialog(LoginDialog.this, texts.getString("login_dialog_error"),

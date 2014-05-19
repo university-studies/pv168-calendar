@@ -121,7 +121,7 @@ public class UsersListDialog extends JDialog {
 
         public void clearTable(){
             userList.clear();
-            
+
             fireTableRowsDeleted(0,0);
         }
 

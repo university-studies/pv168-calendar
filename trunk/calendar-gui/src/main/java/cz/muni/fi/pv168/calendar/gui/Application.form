@@ -44,7 +44,7 @@
           <component id="946a1" class="javax.swing.JButton" binding="signOutButton" default-binding="true">
             <constraints/>
             <properties>
-              <text value="Sign out"/>
+              <text resource-bundle="Texts" key="window_button_sing_out"/>
             </properties>
           </component>
         </children>
