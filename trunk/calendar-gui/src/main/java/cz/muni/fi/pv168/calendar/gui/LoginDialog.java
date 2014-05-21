@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
@@ -48,8 +49,9 @@ public class LoginDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
+                /*
                 String login = textLogin.getText();
-                User user = userManager.getUserByLogin(login);
+                //User user = userManager.getUserByLogin(login);
 
                 try {
                     if (user == null || !PasswordHash.validatePassword(passwordText.getPassword(), user.getPassword())) {
@@ -67,6 +69,52 @@ public class LoginDialog extends JDialog {
                 } catch (InvalidKeySpecException e1) {
                     e1.printStackTrace();
                 }
+                */
+
+                SwingWorker<User,Void> swingWorker = new SwingWorker<User, Void>() {
+                    private String login = textLogin.getText();
+
+                    @Override
+                    protected User doInBackground() throws Exception {
+                        return userManager.getUserByLogin(login);
+                    }
+
+                    @Override
+                    protected void done() {
+                        try {
+                            User user = get();
+                            if (user == null || !PasswordHash.validatePassword(passwordText.getPassword(), user.getPassword())) {
+                                JOptionPane.showMessageDialog(LoginDialog.this, texts.getString("login_dialog_error"),
+                                        texts.getString("error_dialog_title"), JOptionPane.ERROR_MESSAGE);
+                            }
+                            else {
+                                setLoggedSuccessfully(true);
+                                userLogged = user;
+                                //closing dialog
+                                dispose();
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            log.error("Error with loading user",e);
+                            EventQueue.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    JOptionPane.showMessageDialog(LoginDialog.this,texts.getString("error_dialog_title"),
+                                            texts.getString("error_dialog_title"),JOptionPane.ERROR_MESSAGE);
+                                }
+                            });
+                        } catch (InvalidKeySpecException e) {
+                            e.printStackTrace();
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                };
+
+                swingWorker.execute();
+
             }
         });
 
