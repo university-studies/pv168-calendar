@@ -1,6 +1,6 @@
-trunk/.idea
-trunk/*.iml
-trunk/target
+**/.idea
+**/*.iml
+**/target
 trunk/calendar-backend/*.iml
 trunk/calendar-backend/.idea
 trunk/calendar-backend/target
